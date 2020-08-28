@@ -98,7 +98,7 @@ while True:
   draw_text(f"Prism, cost {ns(bc14)}, have {ns(b14)}",(500,553))
   draw_text(f"Chancemaker, cost {ns(bc15)}, have {ns(b15)}",(500,594))
   draw_text(f"Fractal Engine, cost {ns(bc16)}, have {ns(b16)}",(500,635))
-  draw_text(f"Javascript Console, cost {ns(bc17))}, have {ns(b17)}",(500,676))
+  draw_text(f"Javascript Console, cost {ns(bc17)}, have {ns(b17)}",(500,676))
   screen.blit(big_cookie,(225,225))
   pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700))
   pygame.draw.rect(screen,black,pygame.Rect(499,0,2,700))
