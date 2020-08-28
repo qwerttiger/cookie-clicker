@@ -1,4 +1,4 @@
-import sys,threading,os; os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide"; import pygame
+import sys,threading,os,random; os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide"; import pygame
 from decimal import Decimal as decimal
 pygame.init()
 screen=pygame.display.set_mode([700,700])
@@ -10,6 +10,13 @@ big_cookie_mask=pygame.mask.from_surface(big_cookie)
 pointer_mask=pygame.mask.Mask((1,1),True)
 cookies=0
 cps=0
+click1=pygame.mixer.Sound("sounds/click1.wav")
+click2=pygame.mixer.Sound("sounds/click2.wav")
+click3=pygame.mixer.Sound("sounds/click3.wav")
+click4=pygame.mixer.Sound("sounds/click4.wav")
+click5=pygame.mixer.Sound("sounds/click5.wav")
+click6=pygame.mixer.Sound("sounds/click6.wav")
+click7=pygame.mixer.Sound("sounds/click7.wav")
 def drawlines():
   for x in range(1,17):
     pygame.draw.rect(screen,black,pygame.Rect(500,41*x-1,200,2))
