@@ -7,8 +7,6 @@ white=(255,255,255)
 black=(0,0,0)
 big_cookie_mask=pygame.mask.from_surface(big_cookie)
 pointer_mask=pygame.mask.Mask((1,1),True)
-cookies=0
-cps=0
 click1=pygame.mixer.Sound("sounds/click1.wav")
 click2=pygame.mixer.Sound("sounds/click2.wav")
 click3=pygame.mixer.Sound("sounds/click3.wav")
@@ -30,15 +28,15 @@ def buy(num):
     play_random_buy()
 def clear_save():
   file=open("save data.txt","w")
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000")
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0")
   file.close()
 def load_save_data():
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps
   try:
     file=open("save data.txt").read().split()
   except:
     file=open("save data.txt","w")
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000")
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0")
     file.close()
     file=open("save data.txt").read().split()
   b1=int(file[0])
@@ -92,6 +90,8 @@ def load_save_data():
   bp15=float(file[48])
   bp16=float(file[49])
   bp17=float(file[50])
+  cookies=decimal(float(file[51]))
+  cps=float(file[52])
 def play_random_click():
   a=random.randint(1,7)
   exec(f"click{a}.play()")
@@ -149,14 +149,14 @@ def command():
       except Exception as e:
         print(f"Error: {e}")
   finish=True
-add_cookies()
 load_save_data()
+add_cookies()
 while True:
   screen.fill(white)
   if cookies!=decimal("infinity"):
     draw_text(f"{ns(round(cookies))} cookies",(350,100),25,False)
   else:
-    draw_text(f"{ns(decimal('Infinity'))} cookies",(350,100),25,False)
+    draw_text(f"{ns(decimal('infinity'))} cookies",(350,100),25,False)
   draw_text(f"CpS: {ns(cps)}",(350,150),18,False)
   draw_text(f"Cursor, cost {ns(bc1)}, have {b1}",(500,20))
   draw_text(f"Grandma, cost {ns(bc2)}, have {b2}",(500,61))
@@ -201,5 +201,8 @@ while True:
             finish=False
             threading.Thread(target=command).start()
             unblocker()
+    if event.type==pygame.KEYDOWN:
+      if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL):
+        open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps]])"))
 
   pygame.display.update()
