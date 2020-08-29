@@ -1,4 +1,4 @@
-import sys,threading,os,random
+import sys,threading,os,random,time
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide"
 import pygame; from numbershortener import numbershortener as ns; from decimal import Decimal as decimal
 pygame.init()
@@ -63,6 +63,8 @@ def load_save_data():
   bc17=int(file[33])
 def play_random_sound():
   exec(f"click{random.randint(1,7)}.play()")
+  time.sleep(0.1)
+  exec(f"click{random.randint(1,5)}.play()")
 def draw_lines():
   for x in range(1,17):
     pygame.draw.rect(screen,black,pygame.Rect(500,41*x-1,200,2))
@@ -113,5 +115,5 @@ while True:
         mouse_pos=pygame.mouse.get_pos()
         if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)):
           cookies+=1
-          play_random_sound()
+          threading.Thread(target=play_random_sound).start()
   pygame.display.update()
