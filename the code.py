@@ -90,8 +90,8 @@ def load_save_data():
   bp15=float(file[48])
   bp16=float(file[49])
   bp17=float(file[50])
-  cookies=decimal(float(file[51]))
-  cps=float(file[52])
+  cookies=decimal(file[51])
+  cps=decimal(file[52])
 def play_random_click():
   a=random.randint(1,7)
   exec(f"click{a}.play()")
