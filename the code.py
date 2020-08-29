@@ -153,8 +153,11 @@ add_cookies()
 load_save_data()
 while True:
   screen.fill(white)
-  draw_text(f"{round(cookies)} cookies",(350,100),30,False)
-  draw_text(f"CpS: {cps}",(350,150),20,False)
+  if cookies!=decimal("infinity"):
+    draw_text(f"{ns(round(cookies))} cookies",(350,100),25,False)
+  else:
+    draw_text(f"{ns(decimal('Infinity'))} cookies",(350,100),25,False)
+  draw_text(f"CpS: {ns(cps)}",(350,150),18,False)
   draw_text(f"Cursor, cost {ns(bc1)}, have {b1}",(500,20))
   draw_text(f"Grandma, cost {ns(bc2)}, have {b2}",(500,61))
   draw_text(f"Farm, cost {ns(bc3)}, have {b3}",(500,102))
