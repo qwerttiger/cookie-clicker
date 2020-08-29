@@ -18,8 +18,12 @@ click4=pygame.mixer.Sound("sounds/click4.wav")
 click5=pygame.mixer.Sound("sounds/click5.wav")
 click6=pygame.mixer.Sound("sounds/click6.wav")
 click7=pygame.mixer.Sound("sounds/click7.wav")
+buy1=pygame.mixer.Sound("sounds/buy1.wav")
+buy2=pygame.mixer.Sound("sounds/buy2.wav")
+buy3=pygame.mixer.Sound("sounds/buy3.wav")
+buy4=pygame.mixer.Sound("sounds/buy4.wav")
 def load_save_data():
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17
   try:
     file=open("save data.txt").read().split()
   except:
@@ -61,10 +65,33 @@ def load_save_data():
   bc15=int(file[31])
   bc16=int(file[32])
   bc17=int(file[33])
-def play_random_sound():
-  exec(f"click{random.randint(1,7)}.play()")
+  bp1=float(file[34])
+  bp2=float(file[35])
+  bp3=float(file[36])
+  bp4=float(file[37])
+  bp5=float(file[38])
+  bp6=float(file[39])
+  bp7=float(file[40])
+  bp8=float(file[41])
+  bp9=float(file[42])
+  bp10=float(file[43])
+  bp11=float(file[44])
+  bp12=float(file[45])
+  bp13=float(file[46])
+  bp14=float(file[47])
+  bp15=float(file[48])
+  bp16=float(file[49])
+  bp17=float(file[50])
+def play_random_click():
+  a=random.randint(1,7)
+  exec(f"click{a}.play()")
+  a+=random.randint(1,5)
+  a=a%7
+  a=7 if a==0 else a
   time.sleep(0.1)
-  exec(f"click{random.randint(1,5)}.play()")
+  exec(f"click{a}.play()")
+def play_random_buy():
+  exec(f"buy{random.randint(1,7)}.play()")
 def draw_lines():
   for x in range(1,17):
     pygame.draw.rect(screen,black,pygame.Rect(500,41*x-1,200,2))
@@ -115,5 +142,12 @@ while True:
         mouse_pos=pygame.mouse.get_pos()
         if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)):
           cookies+=1
-          threading.Thread(target=play_random_sound).start()
+          threading.Thread(target=play_random_click).start()
+        if mouse_pos[0]>=500:
+          if mouse_pos[1]<41 and cookies>=bc1:
+            bc1=round(bc1*1.15)
+            b1+=1
+            cps+=decimal(str(bp1))
+            cookies-=bc1
+            play_random_buy()
   pygame.display.update()
