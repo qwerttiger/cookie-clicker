@@ -33,6 +33,8 @@ buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
 
 x=None #set x to be nothing
 
+mute=False #set mute to false
+
 def buy(num): #buy building number num
   if num*41-41<=mouse_pos[1]<num*41 and cookies>=eval(f"bc{num}"): #if you click on it and you can buy it
     exec(f"cookies-=bc{num}",globals()) #decrease your cookies
@@ -40,7 +42,8 @@ def buy(num): #buy building number num
     exec(f"b{num}+=1",globals()) #add 1 to bought
     exec(f"cps+=decimal(str(bp{num}))",globals()) #add the cps to your cps
     
-    play_random_buy() #play the buy sound
+    if not mute: #if unmuted
+      play_random_buy() #play the buy sound
 
 def clear_cookies(): #clear cookies
   file=open("save data.txt","w") #open the file
@@ -241,15 +244,18 @@ while True: #game loop
   draw_text("Command Line",(350,550),15,False) #command line text
   
   if cookies!=decimal("infinity"): #if not infinity cookies
-    draw_text(f"{ns(round(total_cookies))}",(0,20),15) #total cookies text
+    draw_text(f"Total cookies: {ns(round(total_cookies))}",(0,20),15) #total cookies text
   else: #if infinity cookies
-    draw_text(f"{ns(decimal('infinity'))} cookies",(0,20),15) #total cookies text
+    draw_text(f"Total cookies: {ns(decimal('infinity'))} cookies",(0,20),15) #total cookies text
   screen.blit(big_cookie,(225,225)) #draw big cookie
   
   pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(screen,black,pygame.Rect(499,0,2,700)) #draw filler 2
   
   pygame.draw.rect(screen,black,pygame.Rect(300,500,100,100),1) #draw command line box
+
+  pygame.draw.rect(screen,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
+  draw_text("Unmute" if mute else "Mute",(350,675),15,False) #draw mute/unmute text
   
   draw_lines() #draw lines
   
@@ -266,7 +272,9 @@ while True: #game loop
         if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
           cookies+=cpc #add cpc to cookies
           total_cookies+=cpc #add cpc to total cookies
-          threading.Thread(target=play_random_click).start() #play random click sound
+          
+          if not mute: #if not muted
+            threading.Thread(target=play_random_click).start() #play random click sound
         
         if mouse_pos[0]>=500: #if you buy
           for _ in range(1,18): #for everything in the range
@@ -279,6 +287,9 @@ while True: #game loop
             finish=False #finish is false
             threading.Thread(target=command).start() #start command line
             unblocker() #unblock
+
+        if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700:
+          mute=not mute
     
     if event.type==pygame.KEYDOWN: #if click down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
