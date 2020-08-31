@@ -42,7 +42,7 @@ def buy(num): #buy building number num
     
     play_random_buy() #play the buy sound
 
-def clear_save(): #clear save
+def clear_cookies(): #clear cookies
   file=open("save data.txt","w") #open the file
   file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0") #write to file
   file.close() #close file
@@ -223,6 +223,10 @@ while True: #game loop
   
   draw_text("Command Line",(350,550),15,False) #command line text
   
+  if cookies!=decimal("infinity"): #if not infinity cookies
+    draw_text(f"{ns(round(total_cookies))}",(0,20),15) #total cookies text
+  else: #if infinity cookies
+    draw_text(f"{ns(decimal('infinity'))} cookies",(0,20),15) #total cookies text
   screen.blit(big_cookie,(225,225)) #draw big cookie
   
   pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700)) #draw filler 1
@@ -243,6 +247,7 @@ while True: #game loop
         
         if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
           cookies+=cpc #add cpc to cookies
+          total_cookies+=cpc #add cpc to total cookies
           threading.Thread(target=play_random_click).start() #play random click sound
         
         if mouse_pos[0]>=500: #if you buy
