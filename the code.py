@@ -152,11 +152,27 @@ def unblocker(): #unblocker
       if event.type==pygame.QUIT: #if quit pygame
         pygame.quit() #pygame quit
         t.cancel() #cancel timer
+        th.cancel() #cancel timer
         sys.exit() #exit
 
 def inputcommand(): #input
   global x #global x
   x=input("Command (\"quit\" to quit): ").lower() #input
+
+def save(autosave=False):
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies]])")) #save
+  if not autosave:
+    print("saved!") #print saved
+  else:
+    print("autosaved") #print autosaved
+
+def autosave():
+  global th #global th
+  
+  save(True) #save
+
+  th=threading.Timer(60,autosave) #th is a timer
+  th.start() #start timer
 
 def command(): #command
   global loop,x,finish #global variables
@@ -191,6 +207,7 @@ def command(): #command
 #real game starts here
 load_save_data() #load save data
 add_cookies() #add cookies
+th=threading.Timer(60,autosave)
 
 while True: #game loop
   screen.fill(white) #fill screen with white
@@ -240,6 +257,7 @@ while True: #game loop
     if event.type==pygame.QUIT: #if quit pygame
       pygame.quit() #pygame quit
       t.cancel() #cancel timer
+      th.cancel() #cancel timer
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
@@ -264,7 +282,6 @@ while True: #game loop
     
     if event.type==pygame.KEYDOWN: #if click down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
-        open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies]])")) #save
-        print("saved!")
+        save() #save
   
   pygame.display.update() #update pygame
