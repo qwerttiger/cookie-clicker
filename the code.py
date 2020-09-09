@@ -5,7 +5,6 @@ import time #import time to sleep
 import os #import os to hide support prompt
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide" #hide support prompt
 import pygame #import pygame
-from numbershortener import numbershortener as ns #import numbershortener to shorten numbers
 from decimal import Decimal as decimal #import decimal numbers with infinite precision
 
 pygame.init() #initiate pygame
@@ -34,6 +33,32 @@ buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
 x=None #set x to be nothing
 
 mute=False #set mute to false
+
+def numbershortener(num): #numbershortener
+  if num<1000000:
+    return str(num)
+  elif num<1000000000:
+    return str(round(num/1000000,3))+" million"
+  elif num<1000000000000:
+    return str(round(num/1000000000,3))+" billion"
+  elif num<1000000000000000:
+    return str(round(num/1000000000000,3))+" trillion"
+  elif num<1000000000000000000:
+    return str(round(num/1000000000000000,3))+" quadrillion"
+  elif num<1000000000000000000000:
+    return str(round(num/1000000000000000000,3))+" quintillion"
+  elif num<1000000000000000000000000:
+    return str(round(num/1000000000000000000000,3))+" sextillion"
+  elif num<1000000000000000000000000000:
+    return str(round(num/1000000000000000000000000,3))+" septillion"
+  elif num<1000000000000000000000000000000:
+    return str(round(num/1000000000000000000000000000,3))+" octillion"
+  elif num<1000000000000000000000000000000000:
+    return str(round(num/1000000000000000000000000000000,3))+" nonillion"
+  elif num<1000000000000000000000000000000000000:
+    return str(round(num/1000000000000000000000000000000000,3))+" decillion"
+  else:
+    return "Infinity"
 
 def buy(num): #buy building number num
   if num*41-41<=mouse_pos[1]<num*41 and cookies>=eval(f"bc{num}"): #if you click on it and you can buy it
@@ -216,37 +241,37 @@ while True: #game loop
   screen.fill(white) #fill screen with white
   
   if cookies!=decimal("infinity"): #if not infinity cookies
-    draw_text(f"{ns(round(cookies))} cookies",(350,100),25,False) #draw text
+    draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
   else: #if infinity cookies
-    draw_text(f"{ns(decimal('infinity'))} cookies",(350,100),25,False) #draw text
+    draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
-  draw_text(f"CpS: {ns(cps)}",(350,150),18,False) #draw cps
+  draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
 
   #these are all building text
-  draw_text(f"Cursor, cost {ns(bc1)}, have {b1}",(500,20))
-  draw_text(f"Grandma, cost {ns(bc2)}, have {b2}",(500,61))
-  draw_text(f"Farm, cost {ns(bc3)}, have {b3}",(500,102))
-  draw_text(f"Mine, cost {ns(bc4)}, have {b4}",(500,143))
-  draw_text(f"Factory, cost {ns(bc5)}, have {b5}",(500,184))
-  draw_text(f"Bank, cost {ns(bc6)}, have {b6}",(500,225))
-  draw_text(f"Temple, cost {ns(bc7)}, have {b7}",(500,266))
-  draw_text(f"Wizard Tower, cost {ns(bc8)}, have {b8}",(500,307))
-  draw_text(f"Shipent, cost {ns(bc9)}, have {b9}",(500,348))
-  draw_text(f"Alchemy Lab, cost {ns(bc10)}, have {b10}",(500,389))
-  draw_text(f"Portal, cost {ns(bc11)}, have {b11}",(500,430))
-  draw_text(f"Time Machine, cost {ns(bc12)}, have {b12}",(500,471))
-  draw_text(f"Antimatter Condenser, cost {ns(bc13)}, have {b13}",(500,512))
-  draw_text(f"Prism, cost {ns(bc14)}, have {b14}",(500,553))
-  draw_text(f"Chancemaker, cost {ns(bc15)}, have {b15}",(500,594))
-  draw_text(f"Fractal Engine, cost {ns(bc16)}, have {b16}",(500,635))
-  draw_text(f"Python Console, cost {ns(bc17)}, have {b17}",(500,676))
+  draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20))
+  draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61))
+  draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102))
+  draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143))
+  draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184))
+  draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225))
+  draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266))
+  draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307))
+  draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348))
+  draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389))
+  draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430))
+  draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471))
+  draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512))
+  draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553))
+  draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594))
+  draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635))
+  draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676))
   
   draw_text("Command Line",(350,550),15,False) #command line text
   
   if cookies!=decimal("infinity"): #if not infinity cookies
-    draw_text(f"Total cookies: {ns(round(total_cookies))}",(0,20),15) #total cookies text
+    draw_text(f"Total cookies: {numbershortener(round(total_cookies))}",(0,20),15) #total cookies text
   else: #if infinity cookies
-    draw_text(f"Total cookies: {ns(decimal('infinity'))} cookies",(0,20),15) #total cookies text
+    draw_text(f"Total cookies: {numbershortener(decimal('infinity'))} cookies",(0,20),15) #total cookies text
   screen.blit(big_cookie,(225,225)) #draw big cookie
   
   pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700)) #draw filler 1
