@@ -72,18 +72,18 @@ def buy(num): #buy building number num
 
 def clear_cookies(): #clear cookies
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100") #write to file
   file.close() #close file
   
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -122,27 +122,28 @@ def load_save_data(): #load save data
   bc15=int(file[31])
   bc16=int(file[32])
   bc17=int(file[33])
-  bp1=float(file[34])
-  bp2=float(file[35])
-  bp3=float(file[36])
-  bp4=float(file[37])
-  bp5=float(file[38])
-  bp6=float(file[39])
-  bp7=float(file[40])
-  bp8=float(file[41])
-  bp9=float(file[42])
-  bp10=float(file[43])
-  bp11=float(file[44])
-  bp12=float(file[45])
-  bp13=float(file[46])
-  bp14=float(file[47])
-  bp15=float(file[48])
-  bp16=float(file[49])
-  bp17=float(file[50])
-  cookies=decimal(file[51])
-  cps=decimal(file[52])
-  cpc=decimal(file[53])
-  total_cookies=decimal(file[54])
+  bp1=decimal(str(file[34]))
+  bp2=decimal(str(file[35]))
+  bp3=decimal(str(file[36]))
+  bp4=decimal(str(file[37]))
+  bp5=decimal(str(file[38]))
+  bp6=decimal(str(file[39]))
+  bp7=decimal(str(file[40]))
+  bp8=decimal(str(file[41]))
+  bp9=decimal(str(file[42]))
+  bp10=decimal(str(file[43]))
+  bp11=decimal(str(file[44]))
+  bp12=decimal(str(file[45]))
+  bp13=decimal(str(file[46]))
+  bp14=decimal(str(file[47]))
+  bp15=decimal(str(file[48]))
+  bp16=decimal(str(file[49]))
+  bp17=decimal(str(file[50]))
+  cookies=decimal(str(file[51]))
+  cps=decimal(str(file[52]))
+  cpc=int(file[53])
+  total_cookies=decimal(str(file[54]))
+  multiplier=int(file[55])
 
 def play_random_click(): #play random click sound
   a=random.randint(1,7) #set a to a random number
@@ -168,8 +169,8 @@ def draw_text(text,pos,size=8,side=True): #draw text
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
   
-  cookies+=decimal(str(cps))/10 #add cookies
-  total_cookies+=decimal(str(cps))/10 #add total cookies
+  cookies+=decimal(str(cps))*multiplier/1000 #add cookies
+  total_cookies+=decimal(str(cps))*multiplier/1000 #add total cookies
   
   t=threading.Timer(0.1,add_cookies) #t is a timer
   t.start() #start timer
@@ -188,7 +189,7 @@ def inputcommand(): #input
   x=input("Command (\"quit\" to quit): ").lower() #input
 
 def save(autosave=False):
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -246,7 +247,7 @@ while True: #game loop
     draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
   draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
-
+  
   #these are all building text
   draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20))
   draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61))
