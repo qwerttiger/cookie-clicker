@@ -268,7 +268,7 @@ th.start()
 changesurface()
 while True: #game loop
   screen.fill(white) #fill screen with white
-  print(time.time())
+  
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
   else: #if infinity cookies
@@ -313,6 +313,7 @@ while True: #game loop
         if mouse_pos[0]>=500: #if you buy
           for _ in range(1,18): #for everything in the range
             buy(_) #see if you bought it
+          changesurface()
         
         if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if click console
           loop=True #loop is true
