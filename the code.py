@@ -7,12 +7,16 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide" #hide support prompt
 import pygame #import pygame
 from decimal import Decimal as decimal #import decimal numbers with infinite precision
 
-pygame.init() #initiate pygame
-screen=pygame.display.set_mode([700,700]) #make screen
-pygame.display.set_caption("Cookie Clicker") #set caption
-
 white=(255,255,255) #set white colour
 black=(0,0,0) #set black colour
+
+pygame.init() #initiate pygame
+screen=pygame.display.set_mode([700,700]) #make screen
+surface=pygame.Surface([700,700]) #make surface
+pygame.display.set_caption("Cookie Clicker") #set caption
+surface.set_colorkey(white)
+
+
 
 pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
@@ -160,11 +164,11 @@ def draw_lines(): #draw these lines
   for x in range(1,17): #for every number in here
     pygame.draw.rect(screen,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
 
-def draw_text(text,pos,size=8,side=True): #draw text
+def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
   if not side: #if not side
-    screen.blit(pygame.font.SysFont("arial",size).render(text,True,(0,0,0)),(pos[0]-round(pygame.font.SysFont("arial",size).render(text,True,(0,0,0)).get_width()/2),pos[1]-pygame.font.SysFont("arial",size).render(text,True,(0,0,0)).get_height()/2)) #draw it
+    surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0]-round(pygame.font.SysFont("arial",size).render(text,True,black).get_width()/2),pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
   else: #if side
-    screen.blit(pygame.font.SysFont("arial",size).render(text,True,(0,0,0)),(pos[0],pos[1]-pygame.font.SysFont("arial",size).render(text,True,(0,0,0)).get_height()/2)) #draw it
+    surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0],pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
 
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
@@ -233,14 +237,38 @@ def command(): #command
   
   finish=True #finish
 
+def changesurface():
+  #these are all building text
+  surface.fill(white)
+  draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20),surface=surface)
+  draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61),surface=surface)
+  draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102),surface=surface)
+  draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143),surface=surface)
+  draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184),surface=surface)
+  draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225),surface=surface)
+  draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266),surface=surface)
+  draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307),surface=surface)
+  draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348),surface=surface)
+  draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389),surface=surface)
+  draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430),surface=surface)
+  draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471),surface=surface)
+  draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512),surface=surface)
+  draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553),surface=surface)
+  draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594),surface=surface)
+  draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635),surface=surface)
+  draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676),surface=surface)
+  
+  draw_text("Command Line",(350,550),15,False,surface) #command line text
+
 #real game starts here
 load_save_data() #load save data
 add_cookies() #add cookies
 th=threading.Timer(60,autosave)
-
+th.start()
+changesurface()
 while True: #game loop
   screen.fill(white) #fill screen with white
-  
+  print(time.time())
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
   else: #if infinity cookies
@@ -248,32 +276,12 @@ while True: #game loop
   
   draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
   
-  #these are all building text
-  draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20))
-  draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61))
-  draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102))
-  draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143))
-  draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184))
-  draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225))
-  draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266))
-  draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307))
-  draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348))
-  draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389))
-  draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430))
-  draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471))
-  draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512))
-  draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553))
-  draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594))
-  draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635))
-  draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676))
-  
-  draw_text("Command Line",(350,550),15,False) #command line text
-  
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"Total cookies: {numbershortener(round(total_cookies))}",(0,20),15) #total cookies text
   else: #if infinity cookies
     draw_text(f"Total cookies: {numbershortener(decimal('infinity'))} cookies",(0,20),15) #total cookies text
   screen.blit(big_cookie,(225,225)) #draw big cookie
+  screen.blit(surface,(0,0))
   
   pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(screen,black,pygame.Rect(499,0,2,700)) #draw filler 2
