@@ -16,7 +16,7 @@ surface=pygame.Surface([700,700]) #make surface
 pygame.display.set_caption("Cookie Clicker") #set caption
 surface.set_colorkey(white)
 
-
+fps_track=False
 
 pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
@@ -176,7 +176,7 @@ def add_cookies(): #add cookies
   cookies+=decimal(str(cps))*multiplier/1000 #add cookies
   total_cookies+=decimal(str(cps))*multiplier/1000 #add total cookies
   
-  t=threading.Timer(0.1,add_cookies) #t is a timer
+  t=timer(0.1,add_cookies) #t is a timer
   t.start() #start timer
 
 def unblocker(): #unblocker
@@ -186,11 +186,13 @@ def unblocker(): #unblocker
         pygame.quit() #pygame quit
         t.cancel() #cancel timer
         th.cancel() #cancel timer
+        if fps_track:
+          tm.cancel()
         sys.exit() #exit
 
 def inputcommand(): #input
   global x #global x
-  x=input("Command (\"quit\" to quit): ").lower() #input
+  x=input("Command (\"quit\" to quit): ") #input
 
 def save(autosave=False):
   open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier]])")) #save
@@ -204,7 +206,7 @@ def autosave():
   
   save(True) #save
 
-  th=threading.Timer(60,autosave) #th is a timer
+  th=timer(60,autosave) #th is a timer
   th.start() #start timer
 
 def command(): #command
@@ -224,7 +226,7 @@ def command(): #command
     else: #then,
       ok=True #ok is true
   
-  if x in ["quit","exit"]: #if x is exit or quit
+  if x.lower() in ["quit","exit"]: #if x is exit or quit
     loop=False #break out of loop
   else: #else
     try: #try to
@@ -260,12 +262,34 @@ def changesurface():
   
   draw_text("Command Line",(350,550),15,False,surface) #command line text
 
+  pygame.draw.rect(surface,black,pygame.Rect(199,0,2,700)) #draw filler 1
+  pygame.draw.rect(surface,black,pygame.Rect(499,0,2,700)) #draw filler 2
+def track_fps():
+  global tm
+  print(round(1/(t1-t2),1))
+  tm=timer(1,track_fps)
+  tm.start()
+
+class timer:
+  def __init__(self,interval,func):
+    self.interval=interval
+    self.func=func
+  def settimer(self):
+    self.timer=threading.Timer(self.interval,self.func)
+  def start(self):
+    self.settimer()
+    self.timer.start()
+  def cancel(self):
+    self.timer.cancel()
+
 #real game starts here
 load_save_data() #load save data
 add_cookies() #add cookies
-th=threading.Timer(60,autosave)
+th=timer(60,autosave)
 th.start()
 changesurface()
+t1=time.time()
+tm=timer(1,track_fps)
 while True: #game loop
   screen.fill(white) #fill screen with white
   
@@ -283,8 +307,7 @@ while True: #game loop
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   
-  pygame.draw.rect(screen,black,pygame.Rect(199,0,2,700)) #draw filler 1
-  pygame.draw.rect(screen,black,pygame.Rect(499,0,2,700)) #draw filler 2
+  
   
   pygame.draw.rect(screen,black,pygame.Rect(300,500,100,100),1) #draw command line box
 
@@ -298,6 +321,8 @@ while True: #game loop
       pygame.quit() #pygame quit
       t.cancel() #cancel timer
       th.cancel() #cancel timer
+      if fps_track:
+        tm.cancel()
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
@@ -317,11 +342,18 @@ while True: #game loop
         
         if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if click console
           loop=True #loop is true
-          
+          t.cancel() #cancel timer
+          th.cancel() #cancel timer
+          if fps_track:
+            tm.cancel()
           while loop: #while loop
             finish=False #finish is false
             threading.Thread(target=command).start() #start command line
             unblocker() #unblock
+          t.start()
+          th.start()
+          if fps_track:
+             tm.start()
 
         if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700:
           mute=not mute
@@ -329,5 +361,7 @@ while True: #game loop
     if event.type==pygame.KEYDOWN: #if click down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
         save() #save
+  
+  t1,t2=time.time(),t1
   
   pygame.display.update() #update pygame
