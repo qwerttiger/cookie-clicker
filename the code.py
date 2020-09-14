@@ -69,7 +69,7 @@ def buy(num): #buy building number num
     exec(f"cookies-=bc{num}",globals()) #decrease your cookies
     exec(f"bc{num}=round(bc{num}*1.15)",globals()) #increase the price
     exec(f"b{num}+=1",globals()) #add 1 to bought
-    exec(f"cps+=decimal(str(bp{num}))",globals()) #add the cps to your cps
+    exec(f"cps+=decimal(bp{num}))",globals()) #add the cps to your cps
     
     if not mute: #if unmuted
       play_random_buy() #play the buy sound
@@ -126,27 +126,27 @@ def load_save_data(): #load save data
   bc15=int(file[31])
   bc16=int(file[32])
   bc17=int(file[33])
-  bp1=decimal(str(file[34]))
-  bp2=decimal(str(file[35]))
-  bp3=decimal(str(file[36]))
-  bp4=decimal(str(file[37]))
-  bp5=decimal(str(file[38]))
-  bp6=decimal(str(file[39]))
-  bp7=decimal(str(file[40]))
-  bp8=decimal(str(file[41]))
-  bp9=decimal(str(file[42]))
-  bp10=decimal(str(file[43]))
-  bp11=decimal(str(file[44]))
-  bp12=decimal(str(file[45]))
-  bp13=decimal(str(file[46]))
-  bp14=decimal(str(file[47]))
-  bp15=decimal(str(file[48]))
-  bp16=decimal(str(file[49]))
-  bp17=decimal(str(file[50]))
-  cookies=decimal(str(file[51]))
-  cps=decimal(str(file[52]))
+  bp1=decimal(file[34])
+  bp2=decimal(file[35])
+  bp3=decimal(file[36])
+  bp4=decimal(file[37])
+  bp5=decimal(file[38])
+  bp6=decimal(file[39])
+  bp7=decimal(file[40])
+  bp8=decimal(file[41])
+  bp9=decimal(file[42])
+  bp10=decimal(file[43])
+  bp11=decimal(file[44])
+  bp12=decimal(file[45])
+  bp13=decimal(file[46])
+  bp14=decimal(file[47])
+  bp15=decimal(file[48])
+  bp16=decimal(file[49])
+  bp17=decimal(file[50])
+  cookies=decimal(file[51])
+  cps=decimal(file[52])
   cpc=int(file[53])
-  total_cookies=decimal(str(file[54]))
+  total_cookies=decimal(file[54])
   multiplier=int(file[55])
 
 def play_random_click(): #play random click sound
@@ -173,8 +173,8 @@ def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
   
-  cookies+=decimal(str(cps))*multiplier/1000 #add cookies
-  total_cookies+=decimal(str(cps))*multiplier/1000 #add total cookies
+  cookies=cps*multiplier/decimal(1000) #add cookies
+  total_cookies+=cps*multiplier/decimal(1000) #add total cookies
   
   t=timer(0.1,add_cookies) #t is a timer
   t.start() #start timer
