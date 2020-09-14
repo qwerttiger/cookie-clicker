@@ -6,7 +6,7 @@ import os #import os to hide support prompt
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide" #hide support prompt
 import pygame #import pygame
 from decimal import Decimal as decimal #import decimal numbers with infinite precision
-
+################################################################################
 white=(255,255,255) #set white colour
 black=(0,0,0) #set black colour
 
@@ -14,9 +14,9 @@ pygame.init() #initiate pygame
 screen=pygame.display.set_mode([700,700]) #make screen
 surface=pygame.Surface([700,700]) #make surface
 pygame.display.set_caption("Cookie Clicker") #set caption
-surface.set_colorkey(white)
+surface.set_colorkey(white) #set white colourkey
 
-fps_track=False
+fps_track=False #set fps track to false
 
 pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
@@ -37,7 +37,7 @@ buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
 x=None #set x to be nothing
 
 mute=False #set mute to false
-
+################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
     return str(num)
@@ -186,8 +186,8 @@ def unblocker(): #unblocker
         pygame.quit() #pygame quit
         t.cancel() #cancel timer
         th.cancel() #cancel timer
-        if fps_track:
-          tm.cancel()
+        if fps_track: #if tracking fps
+          tm.cancel() #cancel timer
         sys.exit() #exit
 
 def inputcommand(): #input
@@ -240,7 +240,7 @@ def command(): #command
   finish=True #finish
 
 def changesurface():
-  #these are all building text
+  #these are all text that either never changes of changes when a building is bought
   surface.fill(white)
   draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20),surface=surface)
   draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61),surface=surface)
@@ -264,32 +264,40 @@ def changesurface():
 
   pygame.draw.rect(surface,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(surface,black,pygame.Rect(499,0,2,700)) #draw filler 2
-def track_fps():
-  global tm
-  print(round(1/(t1-t2),1))
-  tm=timer(1,track_fps)
-  tm.start()
+  pygame.draw.rect(screen,black,pygame.Rect(300,500,100,100),1) #draw command line box
+  pygame.draw.rect(screen,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
+  draw_lines()
 
-class timer:
-  def __init__(self,interval,func):
-    self.interval=interval
-    self.func=func
-  def settimer(self):
-    self.timer=threading.Timer(self.interval,self.func)
-  def start(self):
-    self.settimer()
-    self.timer.start()
-  def cancel(self):
-    self.timer.cancel()
+def track_fps(): #track fps
+  global tm #global timer
+  
+  print(round(1/(t1-t2),1)) #print fps
+  
+  tm=timer(1,track_fps) #tm is a timer
+  tm.start() #start timer
 
-#real game starts here
+class timer: #class timer
+  def __init__(self,interval,func): #def __init__
+    self.interval=interval #intercal
+    self.func=func #and function to call
+  
+  def settimer(self): #set the timer
+    self.timer=threading.Timer(self.interval,self.func) #set the timer
+  
+  def start(self): #def start
+    self.settimer() #set the timer
+    self.timer.start() #and start
+  
+  def cancel(self): #def cancel timer
+    self.timer.cancel() #cancel
+################################################################################
 load_save_data() #load save data
 add_cookies() #add cookies
-th=timer(60,autosave)
-th.start()
-changesurface()
-t1=time.time()
-tm=timer(1,track_fps)
+th=timer(60,autosave) #the autosaving timer
+th.start() #start timer
+changesurface() #change the surface (actually make the surface)
+t1=time.time() #t1 is the time
+tm=timer(1,track_fps) #fps timer but don't start it
 while True: #game loop
   screen.fill(white) #fill screen with white
   
@@ -307,22 +315,15 @@ while True: #game loop
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   
-  
-  
-  pygame.draw.rect(screen,black,pygame.Rect(300,500,100,100),1) #draw command line box
-
-  pygame.draw.rect(screen,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
   draw_text("Unmute" if mute else "Mute",(350,675),15,False) #draw mute/unmute text
-  
-  draw_lines() #draw lines
   
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
       pygame.quit() #pygame quit
       t.cancel() #cancel timer
       th.cancel() #cancel timer
-      if fps_track:
-        tm.cancel()
+      if fps_track: #if track fps
+        tm.cancel() #cancel timer
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
@@ -344,24 +345,24 @@ while True: #game loop
           loop=True #loop is true
           t.cancel() #cancel timer
           th.cancel() #cancel timer
-          if fps_track:
-            tm.cancel()
+          if fps_track: #if tracking fps
+            tm.cancel() #cancel timer
           while loop: #while loop
             finish=False #finish is false
             threading.Thread(target=command).start() #start command line
             unblocker() #unblock
-          t.start()
-          th.start()
-          if fps_track:
-             tm.start()
+          t.start() #restart timer
+          th.start() #restart timer
+          if fps_track: #if tracking fps
+            tm.start() #restart timer
 
-        if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700:
-          mute=not mute
+        if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700: #if mute/unmute
+          mute=not mute #mute/unmute
     
     if event.type==pygame.KEYDOWN: #if click down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
         save() #save
   
-  t1,t2=time.time(),t1
+  t1,t2=time.time(),t1 #change t1 and t2
   
   pygame.display.update() #update pygame
