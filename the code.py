@@ -69,7 +69,7 @@ def buy(num): #buy building number num
     exec(f"cookies-=bc{num}",globals()) #decrease your cookies
     exec(f"bc{num}=round(bc{num}*1.15)",globals()) #increase the price
     exec(f"b{num}+=1",globals()) #add 1 to bought
-    exec(f"cps+=decimal(bp{num}))",globals()) #add the cps to your cps
+    exec(f"cps+=bp{num}",globals()) #add the cps to your cps
     
     if not mute: #if unmuted
       play_random_buy() #play the buy sound
@@ -162,7 +162,7 @@ def play_random_buy(): #play random buy sound
 
 def draw_lines(): #draw these lines
   for x in range(1,17): #for every number in here
-    pygame.draw.rect(screen,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
+    pygame.draw.rect(surface,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
 
 def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
   if not side: #if not side
@@ -173,7 +173,7 @@ def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
   
-  cookies=cps*multiplier/decimal(1000) #add cookies
+  cookies+=cps*multiplier/decimal(1000) #add cookies
   total_cookies+=cps*multiplier/decimal(1000) #add total cookies
   
   t=timer(0.1,add_cookies) #t is a timer
@@ -264,9 +264,15 @@ def changesurface():
 
   pygame.draw.rect(surface,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(surface,black,pygame.Rect(499,0,2,700)) #draw filler 2
-  pygame.draw.rect(screen,black,pygame.Rect(300,500,100,100),1) #draw command line box
-  pygame.draw.rect(screen,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
+  pygame.draw.rect(surface,black,pygame.Rect(300,500,100,100),1) #draw command line box
+  pygame.draw.rect(surface,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
   draw_lines()
+
+  draw_text("Achivevements",(100,50),15,False,surface)
+  pygame.draw.rect(surface,black,pygame.Rect(0,99,200,2))
+
+  draw_text("Stats",(100,150),15,False,surface)
+  pygame.draw.rect(surface,black,pygame.Rect(0,199,200,2))
 
 def track_fps(): #track fps
   global tm #global timer
@@ -307,11 +313,6 @@ while True: #game loop
     draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
   draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
-  
-  if cookies!=decimal("infinity"): #if not infinity cookies
-    draw_text(f"Total cookies: {numbershortener(round(total_cookies))}",(0,20),15) #total cookies text
-  else: #if infinity cookies
-    draw_text(f"Total cookies: {numbershortener(decimal('infinity'))} cookies",(0,20),15) #total cookies text
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   
