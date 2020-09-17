@@ -37,6 +37,10 @@ buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
 x=None #set x to be nothing
 
 mute=False #set mute to false
+
+achievements=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1]]
+achievements_to_unlock=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1]]
+
 ################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -76,18 +80,18 @@ def buy(num): #buy building number num
 
 def clear_cookies(): #clear cookies
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100\n0") #write to file
   file.close() #close file
   
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -148,6 +152,15 @@ def load_save_data(): #load save data
   cpc=int(file[53])
   total_cookies=decimal(file[54])
   multiplier=int(file[55])
+  unlock_achievements=bin(int(file[56]))[2:]
+  
+  while len(unlock_achievements)<len(achievements):
+    unlock_achievements="0"+unlock_achievements
+
+  achievement_id=1
+  for achievement_unlocked in unlock_achievements[::-1]:
+    if int(achievement_unlocked):
+      achievements_to_unlock[achievement_id-1]=[]
 
 def play_random_click(): #play random click sound
   a=random.randint(1,7) #set a to a random number
@@ -195,7 +208,7 @@ def inputcommand(): #input
   x=input("Command (\"quit\" to quit): ") #input
 
 def save(autosave=False):
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements,2)]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -284,7 +297,7 @@ def track_fps(): #track fps
 
 class timer: #class timer
   def __init__(self,interval,func): #def __init__
-    self.interval=interval #intercal
+    self.interval=interval #interval
     self.func=func #and function to call
   
   def settimer(self): #set the timer
@@ -296,6 +309,7 @@ class timer: #class timer
   
   def cancel(self): #def cancel timer
     self.timer.cancel() #cancel
+
 ################################################################################
 load_save_data() #load save data
 add_cookies() #add cookies
@@ -305,6 +319,19 @@ changesurface() #change the surface (actually make the surface)
 t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
 while True: #game loop
+  try:
+    for unlock_cond,name,_,achievement_id in achievements_to_unlock:
+      if eval(unlock_cond):
+        print(f"Achivement: {name}")
+        list_unlock_achievements=list(unlock_achievements)
+        list_unlock_achievements[-achievement_id]="1"
+        unlock_achievements="".join(list_unlock_achievements)
+        achievements_to_unlock[achievement_id-1]=[]
+  except:
+    pass
+      
+      
+      
   screen.fill(white) #fill screen with white
   
   if cookies!=decimal("infinity"): #if not infinity cookies
