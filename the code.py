@@ -42,8 +42,9 @@ rightpanel="b"
 
 mute=False #set mute to false
 
-achievements=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1]]
-achievements_to_unlock=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1]]
+question=pygame.image.load("pictures/question.png")
+achievements=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1,"Have 1 cursor"]]
+achievements_to_unlock=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1,"Have 1 cursor"]]
 
 ################################################################################
 def numbershortener(num): #numbershortener
@@ -179,7 +180,7 @@ def play_random_buy(): #play random buy sound
 
 def draw_lines(): #draw these lines
   for x in range(1,17): #for every number in here
-    pygame.draw.rect(surface2,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
+    pygame.draw.rect(surface,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
 
 def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
   if not side: #if not side
@@ -278,6 +279,7 @@ def changesurface():
     draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594),surface=surface)
     draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635),surface=surface)
     draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676),surface=surface)
+    draw_lines()
 
 def draw():
   surface2.fill(white)
@@ -288,13 +290,12 @@ def draw():
   pygame.draw.rect(surface2,black,pygame.Rect(499,0,2,700)) #draw filler 2
   pygame.draw.rect(surface2,black,pygame.Rect(300,500,100,100),1) #draw command line box
   pygame.draw.rect(surface2,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
-  draw_lines()
 
   draw_text("Achivevements",(100,50),15,False,surface2)
   pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2))
 
-  draw_text("Stats",(100,150),15,False,surface2)
-  pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
+  #draw_text("Stats",(100,150),15,False,surface2)
+  #pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
 
 def track_fps(): #track fps
   global tm #global timer
@@ -330,7 +331,7 @@ t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
 while True: #game loop
   try:
-    for unlock_cond,name,_,achievement_id in achievements_to_unlock:
+    for unlock_cond,name,_,achievement_id,_ in achievements_to_unlock:
       if eval(unlock_cond):
         print(f"Achivement: {name}")
         list_unlock_achievements=list(unlock_achievements)
@@ -340,10 +341,20 @@ while True: #game loop
   except:
     pass
       
-#  if rightpanel=="a":
-#    for 
-      
   screen.fill(white) #fill screen with white
+
+  if rightpanel=="a":
+    for _,name,icon,achievement_id,desc in achievements:
+      if unlock_achievements[achievement_id-1]=="1":
+        screen.blit(icon,(475+25*(achievement_id%8),25*(achievement_id//8)))
+        if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
+          draw_text(f"{name}: {desc}",(320,25*(achievement_id//8)+12),15)
+      else:
+        screen.blit(question,(475+25*(achievement_id%8),25*(achievement_id//8)))
+        if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
+          draw_text("???: ???",(320,25*(achievement_id//8)+12),15)
   
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
@@ -376,7 +387,7 @@ while True: #game loop
           if not mute: #if not muted
             threading.Thread(target=play_random_click).start() #play random click sound
         
-        if mouse_pos[0]>=500: #if you buy
+        if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
           for _ in range(1,18): #for everything in the range
             buy(_) #see if you bought it
           changesurface()
@@ -401,6 +412,7 @@ while True: #game loop
             rightpanel="a"
           else:
             rightpanel="b"
+          changesurface()
         
         if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700: #if mute/unmute
           mute=not mute #mute/unmute
