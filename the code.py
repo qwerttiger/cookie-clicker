@@ -13,8 +13,10 @@ black=(0,0,0) #set black colour
 pygame.init() #initiate pygame
 screen=pygame.display.set_mode([700,700]) #make screen
 surface=pygame.Surface([700,700]) #make surface
+surface2=pygame.Surface([700,700]) #make surface2
 pygame.display.set_caption("Cookie Clicker") #set caption
 surface.set_colorkey(white) #set white colourkey
+surface2.set_colorkey(white) #set white colourkey
 
 fps_track=False #set fps track to false
 
@@ -35,6 +37,8 @@ buy3=pygame.mixer.Sound("sounds/buy3.wav") #buy sound 3
 buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
 
 x=None #set x to be nothing
+
+rightpanel="b"
 
 mute=False #set mute to false
 
@@ -152,13 +156,13 @@ def load_save_data(): #load save data
   cpc=int(file[53])
   total_cookies=decimal(file[54])
   multiplier=int(file[55])
-  unlock_achievements=bin(int(file[56]))[2:]
+  unlock_achievements=bin(int(file[56]))[:-2:-1]
   
   while len(unlock_achievements)<len(achievements):
     unlock_achievements="0"+unlock_achievements
 
   achievement_id=1
-  for achievement_unlocked in unlock_achievements[::-1]:
+  for achievement_unlocked in unlock_achievements:
     if int(achievement_unlocked):
       achievements_to_unlock[achievement_id-1]=[]
 
@@ -175,7 +179,7 @@ def play_random_buy(): #play random buy sound
 
 def draw_lines(): #draw these lines
   for x in range(1,17): #for every number in here
-    pygame.draw.rect(surface,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
+    pygame.draw.rect(surface2,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
 
 def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
   if not side: #if not side
@@ -208,7 +212,7 @@ def inputcommand(): #input
   x=input("Command (\"quit\" to quit): ") #input
 
 def save(autosave=False):
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements,2)]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2)]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -255,37 +259,42 @@ def command(): #command
 def changesurface():
   #these are all text that either never changes of changes when a building is bought
   surface.fill(white)
-  draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20),surface=surface)
-  draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61),surface=surface)
-  draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102),surface=surface)
-  draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143),surface=surface)
-  draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184),surface=surface)
-  draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225),surface=surface)
-  draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266),surface=surface)
-  draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307),surface=surface)
-  draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348),surface=surface)
-  draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389),surface=surface)
-  draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430),surface=surface)
-  draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471),surface=surface)
-  draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512),surface=surface)
-  draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553),surface=surface)
-  draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594),surface=surface)
-  draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635),surface=surface)
-  draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676),surface=surface)
-  
-  draw_text("Command Line",(350,550),15,False,surface) #command line text
 
-  pygame.draw.rect(surface,black,pygame.Rect(199,0,2,700)) #draw filler 1
-  pygame.draw.rect(surface,black,pygame.Rect(499,0,2,700)) #draw filler 2
-  pygame.draw.rect(surface,black,pygame.Rect(300,500,100,100),1) #draw command line box
-  pygame.draw.rect(surface,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
+  if rightpanel=="b":
+    draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20),surface=surface)
+    draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61),surface=surface)
+    draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102),surface=surface)
+    draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143),surface=surface)
+    draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184),surface=surface)
+    draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225),surface=surface)
+    draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266),surface=surface)
+    draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307),surface=surface)
+    draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348),surface=surface)
+    draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389),surface=surface)
+    draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430),surface=surface)
+    draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471),surface=surface)
+    draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512),surface=surface)
+    draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553),surface=surface)
+    draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594),surface=surface)
+    draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635),surface=surface)
+    draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676),surface=surface)
+
+def draw():
+  surface2.fill(white)
+  
+  draw_text("Command Line",(350,550),15,False,surface2) #command line text
+
+  pygame.draw.rect(surface2,black,pygame.Rect(199,0,2,700)) #draw filler 1
+  pygame.draw.rect(surface2,black,pygame.Rect(499,0,2,700)) #draw filler 2
+  pygame.draw.rect(surface2,black,pygame.Rect(300,500,100,100),1) #draw command line box
+  pygame.draw.rect(surface2,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
   draw_lines()
 
-  draw_text("Achivevements",(100,50),15,False,surface)
-  pygame.draw.rect(surface,black,pygame.Rect(0,99,200,2))
+  draw_text("Achivevements",(100,50),15,False,surface2)
+  pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2))
 
-  draw_text("Stats",(100,150),15,False,surface)
-  pygame.draw.rect(surface,black,pygame.Rect(0,199,200,2))
+  draw_text("Stats",(100,150),15,False,surface2)
+  pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
 
 def track_fps(): #track fps
   global tm #global timer
@@ -316,6 +325,7 @@ add_cookies() #add cookies
 th=timer(60,autosave) #the autosaving timer
 th.start() #start timer
 changesurface() #change the surface (actually make the surface)
+draw()
 t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
 while True: #game loop
@@ -324,13 +334,14 @@ while True: #game loop
       if eval(unlock_cond):
         print(f"Achivement: {name}")
         list_unlock_achievements=list(unlock_achievements)
-        list_unlock_achievements[-achievement_id]="1"
+        list_unlock_achievements[achievement_id-1]="1"
         unlock_achievements="".join(list_unlock_achievements)
         achievements_to_unlock[achievement_id-1]=[]
   except:
     pass
       
-      
+#  if rightpanel=="a":
+#    for 
       
   screen.fill(white) #fill screen with white
   
@@ -342,6 +353,7 @@ while True: #game loop
   draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
+  screen.blit(surface2,(0,0))
   
   draw_text("Unmute" if mute else "Mute",(350,675),15,False) #draw mute/unmute text
   
@@ -384,6 +396,12 @@ while True: #game loop
           if fps_track: #if tracking fps
             tm.start() #restart timer
 
+        if mouse_pos[0]<=200 and mouse_pos[1]<=200:
+          if rightpanel!="a":
+            rightpanel="a"
+          else:
+            rightpanel="b"
+        
         if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700: #if mute/unmute
           mute=not mute #mute/unmute
     
