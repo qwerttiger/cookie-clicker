@@ -43,8 +43,8 @@ rightpanel="b"
 mute=False #set mute to false
 
 question=pygame.image.load("pictures/question.png")
-achievements=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1,"Have 1 cursor"]]
-achievements_to_unlock=[["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),1,"Have 1 cursor"]]
+achievements=[["total_cookies>=1","Wake and bake",pygame.image.load("pictures/cookie1.png"),1,"Bake 1 cookie"],["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),2,"Have 1 cursor"]]
+achievements_to_unlock=achievements[:]
 
 ################################################################################
 def numbershortener(num): #numbershortener
@@ -187,6 +187,13 @@ def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
     surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0]-round(pygame.font.SysFont("arial",size).render(text,True,black).get_width()/2),pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
   else: #if side
     surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0],pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
+
+def draw_text2(text,pos,size=(180,25)):
+  x=pygame.font.SysFont("arial",15).render(text,True,black)
+  if x.get_width()<=size[0]:
+    draw_text(text,(pos[0],pos[1]+size[1]//2),15)
+  else:
+    screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",1000).render(text,True,black),size),pos)
 
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
@@ -349,12 +356,12 @@ while True: #game loop
         screen.blit(icon,(475+25*(achievement_id%8),25*(achievement_id//8)))
         if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
           pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          draw_text(f"{name}: {desc}",(320,25*(achievement_id//8)+12),15)
+          draw_text2(f"{name}: {desc}",(320,25*(achievement_id//8)))
       else:
         screen.blit(question,(475+25*(achievement_id%8),25*(achievement_id//8)))
         if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
           pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          draw_text("???: ???",(320,25*(achievement_id//8)+12),15)
+          draw_text2("???: ???",(320,25*(achievement_id//8)))
   
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
