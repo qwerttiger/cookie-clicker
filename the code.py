@@ -338,13 +338,15 @@ t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
 while True: #game loop
   try:
+    x=0
     for unlock_cond,name,_,achievement_id,_ in achievements_to_unlock:
       if eval(unlock_cond):
         print(f"Achivement: {name}")
         list_unlock_achievements=list(unlock_achievements)
         list_unlock_achievements[achievement_id-1]="1"
         unlock_achievements="".join(list_unlock_achievements)
-        achievements_to_unlock[achievement_id-1]=[]
+        achievements_to_unlock[x:x+1]=[]
+      x+=1
   except:
     pass
       
