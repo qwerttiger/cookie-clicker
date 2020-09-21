@@ -43,7 +43,7 @@ rightpanel="b"
 mute=False #set mute to false
 
 question=pygame.image.load("pictures/question.png")
-achievements=[["total_cookies>=1","Wake and bake",pygame.image.load("pictures/cookie1.png"),1,"Bake 1 cookie"],["b1>=1","Click",pygame.image.load("pictures/cursor1.png"),2,"Have 1 cursor"]]
+achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]")]
 achievements_to_unlock=achievements[:]
 
 ################################################################################
@@ -74,7 +74,7 @@ def numbershortener(num): #numbershortener
     return "Infinity"
 
 def buy(num): #buy building number num
-  if num*41-41<=mouse_pos[1]<num*41 and cookies>=eval(f"bc{num}"): #if you click on it and you can buy it
+  if num*43-43<=mouse_pos[1]<num*43 and cookies>=eval(f"bc{num}"): #if you click on it and you can buy it
     exec(f"cookies-=bc{num}",globals()) #decrease your cookies
     exec(f"bc{num}=round(bc{num}*1.15)",globals()) #increase the price
     exec(f"b{num}+=1",globals()) #add 1 to bought
@@ -84,19 +84,20 @@ def buy(num): #buy building number num
       play_random_buy() #play the buy sound
 
 def clear_cookies(): #clear cookies
+  global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0") #write to file
   file.close() #close file
-  
+  achievements_to_unlock=achievements[:]
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bc17,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,bp17,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n71000000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n1100000000000\n0\n0\n1\n0\n100\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -117,47 +118,44 @@ def load_save_data(): #load save data
   b14=int(file[13])
   b15=int(file[14])
   b16=int(file[15])
-  b17=int(file[16])
-  bc1=int(file[17])
-  bc2=int(file[18])
-  bc3=int(file[19])
-  bc4=int(file[20])
-  bc5=int(file[21])
-  bc6=int(file[22])
-  bc7=int(file[23])
-  bc8=int(file[24])
-  bc9=int(file[25])
-  bc10=int(file[26])
-  bc11=int(file[27])
-  bc12=int(file[28])
-  bc13=int(file[29])
-  bc14=int(file[30])
-  bc15=int(file[31])
-  bc16=int(file[32])
-  bc17=int(file[33])
-  bp1=decimal(file[34])
-  bp2=decimal(file[35])
-  bp3=decimal(file[36])
-  bp4=decimal(file[37])
-  bp5=decimal(file[38])
-  bp6=decimal(file[39])
-  bp7=decimal(file[40])
-  bp8=decimal(file[41])
-  bp9=decimal(file[42])
-  bp10=decimal(file[43])
-  bp11=decimal(file[44])
-  bp12=decimal(file[45])
-  bp13=decimal(file[46])
-  bp14=decimal(file[47])
-  bp15=decimal(file[48])
-  bp16=decimal(file[49])
-  bp17=decimal(file[50])
-  cookies=decimal(file[51])
-  cps=decimal(file[52])
-  cpc=int(file[53])
-  total_cookies=decimal(file[54])
-  multiplier=int(file[55])
-  unlock_achievements=bin(int(file[56]))[:-2:-1]
+  bc1=int(file[16])
+  bc2=int(file[17])
+  bc3=int(file[18])
+  bc4=int(file[19])
+  bc5=int(file[20])
+  bc6=int(file[21])
+  bc7=int(file[22])
+  bc8=int(file[23])
+  bc9=int(file[24])
+  bc10=int(file[25])
+  bc11=int(file[26])
+  bc12=int(file[27])
+  bc13=int(file[28])
+  bc14=int(file[29])
+  bc15=int(file[30])
+  bc16=int(file[31])
+  bp1=decimal(file[32])
+  bp2=decimal(file[33])
+  bp3=decimal(file[34])
+  bp4=decimal(file[35])
+  bp5=decimal(file[36])
+  bp6=decimal(file[37])
+  bp7=decimal(file[38])
+  bp8=decimal(file[39])
+  bp9=decimal(file[40])
+  bp10=decimal(file[41])
+  bp11=decimal(file[42])
+  bp12=decimal(file[43])
+  bp13=decimal(file[44])
+  bp14=decimal(file[45])
+  bp15=decimal(file[46])
+  bp16=decimal(file[47])
+  cookies=decimal(file[48])
+  cps=decimal(file[49])
+  cpc=int(file[50])
+  total_cookies=decimal(file[51])
+  multiplier=int(file[52])
+  unlock_achievements=bin(int(file[53]))[:-2:-1]
   
   while len(unlock_achievements)<len(achievements):
     unlock_achievements="0"+unlock_achievements
@@ -179,8 +177,8 @@ def play_random_buy(): #play random buy sound
   exec(f"buy{random.randint(1,4)}.play()") #play sound
 
 def draw_lines(): #draw these lines
-  for x in range(1,17): #for every number in here
-    pygame.draw.rect(surface,black,pygame.Rect(500,41*x-1,200,2)) #draw a line corresponding to the number
+  for x in range(1,16): #for every number in here
+    pygame.draw.rect(surface,black,pygame.Rect(500,round(700/16*x-1),200,2)) #draw a line corresponding to the number
 
 def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
   if not side: #if not side
@@ -269,23 +267,22 @@ def changesurface():
   surface.fill(white)
 
   if rightpanel=="b":
-    draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,20),surface=surface)
-    draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,61),surface=surface)
-    draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,102),surface=surface)
-    draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,143),surface=surface)
-    draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,184),surface=surface)
-    draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,225),surface=surface)
-    draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,266),surface=surface)
-    draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,307),surface=surface)
-    draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,348),surface=surface)
-    draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,389),surface=surface)
-    draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,430),surface=surface)
-    draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,471),surface=surface)
-    draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,512),surface=surface)
-    draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,553),surface=surface)
-    draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,594),surface=surface)
-    draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,635),surface=surface)
-    draw_text(f"Python Console, cost {numbershortener(bc17)}, have {b17}",(500,676),surface=surface)
+    draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,22),surface=surface)
+    draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,66),surface=surface)
+    draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,109),surface=surface)
+    draw_text(f"Mine, cost {numbershortener(bc4)}, have {b4}",(500,153),surface=surface)
+    draw_text(f"Factory, cost {numbershortener(bc5)}, have {b5}",(500,197),surface=surface)
+    draw_text(f"Bank, cost {numbershortener(bc6)}, have {b6}",(500,241),surface=surface)
+    draw_text(f"Temple, cost {numbershortener(bc7)}, have {b7}",(500,284),surface=surface)
+    draw_text(f"Wizard Tower, cost {numbershortener(bc8)}, have {b8}",(500,328),surface=surface)
+    draw_text(f"Shipent, cost {numbershortener(bc9)}, have {b9}",(500,372),surface=surface)
+    draw_text(f"Alchemy Lab, cost {numbershortener(bc10)}, have {b10}",(500,416),surface=surface)
+    draw_text(f"Portal, cost {numbershortener(bc11)}, have {b11}",(500,459),surface=surface)
+    draw_text(f"Time Machine, cost {numbershortener(bc12)}, have {b12}",(500,503),surface=surface)
+    draw_text(f"Antimatter Condenser, cost {numbershortener(bc13)}, have {b13}",(500,547),surface=surface)
+    draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,591),surface=surface)
+    draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,634),surface=surface)
+    draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,678),surface=surface)
     draw_lines()
 
 def draw():
@@ -397,7 +394,7 @@ while True: #game loop
             threading.Thread(target=play_random_click).start() #play random click sound
         
         if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
-          for _ in range(1,18): #for everything in the range
+          for _ in range(1,17): #for everything in the range
             buy(_) #see if you bought it
           changesurface()
         

@@ -1,5 +1,0 @@
-cheats:
-
-for n in range(1,18): exec(f"bc{n}=0",globals())       everything costs nothing
-cookies=decimal("Infinity")                            you have infinity cookies
-cps=decimal("Infinity")                                you have infinite cps
