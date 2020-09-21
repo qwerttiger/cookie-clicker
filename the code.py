@@ -324,6 +324,18 @@ class timer: #class timer
   def cancel(self): #def cancel timer
     self.timer.cancel() #cancel
 
+def unlock_achievement(achievement_id):
+  global unlock_achievements,achievements_to_unlock
+  print(f"Achievement: {achievements[[a for _,_,_,a,_ in achievements].index(achievement_id)][1]}")
+  list_unlock_achievements=list(unlock_achievements)
+  list_unlock_achievements[achievement_id-1]="1"
+  unlock_achievements="".join(list_unlock_achievements)
+  achievements_to_unlock[[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id):[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id)+1]=[]
+
+def debug_game():
+  for achievement_id in range(1,len(achievements)+1):
+    unlock_achievement(achievement_id)
+
 ################################################################################
 load_save_data() #load save data
 add_cookies() #add cookies
@@ -348,19 +360,6 @@ while True: #game loop
     pass
       
   screen.fill(white) #fill screen with white
-
-  if rightpanel=="a":
-    for _,name,icon,achievement_id,desc in achievements:
-      if unlock_achievements[achievement_id-1]=="1":
-        screen.blit(icon,(475+25*(achievement_id%8),25*(achievement_id//8)))
-        if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          draw_text2(f"{name}: {desc}",(320,25*(achievement_id//8)))
-      else:
-        screen.blit(question,(475+25*(achievement_id%8),25*(achievement_id//8)))
-        if 475+25*(achievement_id%8)<=pygame.mouse.get_pos()[0]<=500+25*(achievement_id%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          draw_text2("???: ???",(320,25*(achievement_id//8)))
   
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
@@ -371,6 +370,21 @@ while True: #game loop
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   screen.blit(surface2,(0,0))
+
+  if rightpanel=="a":
+    for _,name,icon,achievement_id,desc in achievements:
+      if unlock_achievements[achievement_id-1]=="1":
+        screen.blit(icon,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*(achievement_id//8)+1,178,23))
+          draw_text2(f"{name}: {desc}",(320,25*(achievement_id//8)))
+      else:
+        screen.blit(question,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*(achievement_id//8)+1,178,23))
+          draw_text2("???: ???",(320,25*(achievement_id//8)))
   
   draw_text("Unmute" if mute else "Mute",(350,675),15,False) #draw mute/unmute text
   
