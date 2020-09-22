@@ -56,11 +56,11 @@ mute sound (v1.34)
 
 20200914:
 multiplier (v1.35)
-**WAYYY faster game (v1.4)**
+**WAYYY faster game (v1.40)**
 track fps (v1.44)
 
 20200917:
-**kinda make achievements (v1.5)**
+**kinda make achievements (v1.50)**
 better achievements kinda (v1.52)
 
 20200918:
@@ -68,3 +68,7 @@ WAY better achievements (v1.55)
 
 20200921:
 **ok more achievements (v1.60)**
+
+20200922:
+2 line achievements (v1.62)
+**golden cookies part 1 (v1.70)**

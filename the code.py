@@ -23,6 +23,8 @@ fps_track=False #set fps track to false
 pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
 big_cookie_mask=pygame.mask.from_surface(big_cookie) #big cookie mask
+gold_cookie=pygame.image.load("pictures/golden.png") #golden cookie picture
+gold_cookie_mask=pygame.mask.from_surface(gold_cookie) #golden cookie mask
 
 click1=pygame.mixer.Sound("sounds/click1.wav") #click sound 1
 click2=pygame.mixer.Sound("sounds/click2.wav") #click sound 2
@@ -35,6 +37,7 @@ buy1=pygame.mixer.Sound("sounds/buy1.wav") #buy sound 1
 buy2=pygame.mixer.Sound("sounds/buy2.wav") #buy sound 2
 buy3=pygame.mixer.Sound("sounds/buy3.wav") #buy sound 3
 buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
+gold_sound=pygame.mixer.Sound("sounds/golden.wav")
 
 x=None #set x to be nothing
 
@@ -45,6 +48,8 @@ mute=False #set mute to false
 question=pygame.image.load("pictures/question.png")
 achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]")]
 achievements_to_unlock=achievements[:]
+
+goldens=[]
 
 ################################################################################
 def numbershortener(num): #numbershortener
@@ -86,18 +91,18 @@ def buy(num): #buy building number num
 def clear_cookies(): #clear cookies
   global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0\n0") #write to file
   file.close() #close file
   achievements_to_unlock=achievements[:]
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -156,6 +161,7 @@ def load_save_data(): #load save data
   total_cookies=decimal(file[51])
   multiplier=int(file[52])
   unlock_achievements=bin(int(file[53]))[:-2:-1]
+  ft=timer(int(file[54]),finishfrenzy)
   
   while len(unlock_achievements)<len(achievements):
     unlock_achievements="0"+unlock_achievements
@@ -218,11 +224,13 @@ def inputcommand(): #input
   x=input("Command (\"quit\" to quit): ") #input
 
 def save(autosave=False):
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2)]])")) #save
+  ft.cancel()
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft)]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
     print("autosaved") #print autosaved
+  ft.start()
 
 def autosave():
   global th #global th
@@ -309,17 +317,22 @@ def track_fps(): #track fps
 class timer: #class timer
   def __init__(self,interval,func): #def __init__
     self.interval=interval #interval
+    self.timeleft=interval
     self.func=func #and function to call
+    self.starttime=time.time()
+    self.settimer()
   
   def settimer(self): #set the timer
-    self.timer=threading.Timer(self.interval,self.func) #set the timer
+    self.timer=threading.Timer(self.timeleft,self.func) #set the timer
   
   def start(self): #def start
-    self.settimer() #set the timer
+    self.settimer()
     self.timer.start() #and start
+    self.starttime=time.time()
   
   def cancel(self): #def cancel timer
     self.timer.cancel() #cancel
+    self.timeleft=self.interval-time.time()+self.starttime
 
 def unlock_achievement(achievement_id,will_print=True):
   global unlock_achievements,achievements_to_unlock
@@ -336,6 +349,43 @@ def debug_game():
       unlock_achievement(achievement_id,False)
   except:
     pass
+
+class golden:
+  def __init__(self):
+    self.pos=[random.randint(0,608),random.randint(0,608)]
+    self.randout=random.choice(["Lucky","Frenzy"])
+  
+  def check(self):
+    if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])):
+      threading.Thread(target=self.effect).start()
+      return True
+      
+  
+  def effect(self):
+    if self.randout=="Lucky":
+      global cookies,total_cookies
+      cookies+=13+min(round(decimal(0.15)*cookies),15*cps)
+      total_cookies+=13+min(round(decimal(0.15)*cookies),15*cps)
+    if self.randout=="Frenzy":
+      frenzy()
+  
+  def draw(self):
+    screen.blit(gold_cookie,self.pos)
+
+def frenzy():
+  global multiplier,ft
+  multiplier*=7
+  ft=timer(77,finishfrenzy)
+
+def finishfrenzy():
+  global multiplier
+  multiplier=round(multiplier/7)
+
+def spawn_golden():
+  global goldens
+  x=golden()
+  goldens+=[x]
+  gold_sound.play()
 
 ################################################################################
 load_save_data() #load save data
@@ -367,11 +417,11 @@ while True: #game loop
   else: #if infinity cookies
     draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
-  draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
+  draw_text(f"CpS: {numbershortener(cps*multiplier/100)}",(350,150),18,False) #draw cps
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   screen.blit(surface2,(0,0))
-
+  
   if rightpanel=="a":
     for _,name,icon,achievement_id,desc in achievements:
       if unlock_achievements[achievement_id-1]=="1":
@@ -390,6 +440,8 @@ while True: #game loop
           draw_text2("???",(320,25*((achievement_id-1)//8+1)))
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
+
+  [gc.draw() for gc in goldens]
   
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
@@ -424,6 +476,10 @@ while True: #game loop
         
         if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
           mute=not mute #mute/unmute
+
+        for gc in goldens:
+          if gc.check():
+            goldens.remove(gc)
     
     if event.type==pygame.KEYDOWN: #if key down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
@@ -434,6 +490,8 @@ while True: #game loop
         th.cancel() #cancel timer
         if fps_track: #if tracking fps
           tm.cancel() #cancel timer
+        if [gc.randout for gc in goldens].count("Frenzy"):
+          ft.cancel()
         while loop: #while loop
           finish=False #finish is false
           threading.Thread(target=command).start() #start command line
@@ -442,6 +500,8 @@ while True: #game loop
         th.start() #restart timer
         if fps_track: #if tracking fps
           tm.start() #restart timer
+        if [gc.randout for gc in goldens].count("Frenzy"):
+          ft.start()
   
   t1,t2=time.time(),t1 #change t1 and t2
   
