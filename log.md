@@ -1,10 +1,9 @@
 currently working on:
-achivements
+golden cookies
 ---
 gonna work on:
 milk
 upgrades
-golden cookies
 ascend
 sugar lump
 seasons

@@ -357,9 +357,7 @@ class golden:
   
   def check(self):
     if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])):
-      threading.Thread(target=self.effect).start()
-      return True
-      
+      return True      
   
   def effect(self):
     if self.randout=="Lucky":
@@ -452,34 +450,37 @@ while True: #game loop
         tm.cancel() #cancel timer
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
+      
       if event.button in [1,2,3]: #if you click and not scroll
         mouse_pos=pygame.mouse.get_pos() #set mouse_pos to mouse position
-        
-        if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
-          cookies+=cpc #add cpc to cookies
-          total_cookies+=cpc #add cpc to total cookies
+        if not sum([int(bool(gc.check())) for gc in goldens]):
+          if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
+            cookies+=cpc #add cpc to cookies
+            total_cookies+=cpc #add cpc to total cookies
+            
+            if not mute: #if not muted
+              threading.Thread(target=play_random_click).start() #play random click sound
           
-          if not mute: #if not muted
-            threading.Thread(target=play_random_click).start() #play random click sound
-        
-        if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
-          for _ in range(1,17): #for everything in the range
-            buy(_) #see if you bought it
-          changesurface()
+          if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
+            for _ in range(1,17): #for everything in the range
+              buy(_) #see if you bought it
+            changesurface()
 
-        if mouse_pos[0]<=200 and mouse_pos[1]<=200:
-          if rightpanel!="a":
-            rightpanel="a"
-          else:
-            rightpanel="b"
-          changesurface()
-        
-        if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
-          mute=not mute #mute/unmute
+          if mouse_pos[0]<=200 and mouse_pos[1]<=200:
+            if rightpanel!="a":
+              rightpanel="a"
+            else:
+              rightpanel="b"
+            changesurface()
+          
+          if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
+            mute=not mute #mute/unmute
 
-        for gc in goldens:
+        for gc in goldens[::-1]:
           if gc.check():
+            gc.effect()
             goldens.remove(gc)
+            break
     
     if event.type==pygame.KEYDOWN: #if key down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
