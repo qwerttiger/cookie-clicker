@@ -287,13 +287,10 @@ def changesurface():
 
 def draw():
   surface2.fill(white)
-  
-  draw_text("Command Line",(350,550),15,False,surface2) #command line text
 
   pygame.draw.rect(surface2,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(surface2,black,pygame.Rect(499,0,2,700)) #draw filler 2
-  pygame.draw.rect(surface2,black,pygame.Rect(300,500,100,100),1) #draw command line box
-  pygame.draw.rect(surface2,black,pygame.Rect(300,650,100,50),1) #draw mute/unmute box
+  pygame.draw.rect(surface2,black,pygame.Rect(300,500,100,100),1) #draw mute/unmute box
 
   draw_text("Achivevements",(100,50),15,False,surface2)
   pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2))
@@ -324,17 +321,21 @@ class timer: #class timer
   def cancel(self): #def cancel timer
     self.timer.cancel() #cancel
 
-def unlock_achievement(achievement_id):
+def unlock_achievement(achievement_id,will_print=True):
   global unlock_achievements,achievements_to_unlock
-  print(f"Achievement: {achievements[[a for _,_,_,a,_ in achievements].index(achievement_id)][1]}")
+  if will_print:
+    print(f"Achievement: {achievements[[a for _,_,_,a,_ in achievements].index(achievement_id)][1]}")
   list_unlock_achievements=list(unlock_achievements)
   list_unlock_achievements[achievement_id-1]="1"
   unlock_achievements="".join(list_unlock_achievements)
   achievements_to_unlock[[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id):[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id)+1]=[]
 
 def debug_game():
-  for achievement_id in range(1,len(achievements)+1):
-    unlock_achievement(achievement_id)
+  try:
+    for achievement_id in range(1,len(achievements)+1):
+      unlock_achievement(achievement_id,False)
+  except:
+    pass
 
 ################################################################################
 load_save_data() #load save data
@@ -375,18 +376,18 @@ while True: #game loop
     for _,name,icon,achievement_id,desc in achievements:
       if unlock_achievements[achievement_id-1]=="1":
         screen.blit(icon,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
-        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*(achievement_id//8)+1,178,23))
-          draw_text2(f"{name}: {desc}",(320,25*(achievement_id//8)))
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,25),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,23))
+          draw_text2(f"{name}: {desc}",(320,25*((achievement_id-1)//8)))
       else:
         screen.blit(question,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
-        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*(achievement_id//8)<=pygame.mouse.get_pos()[1]<=25+25*(achievement_id//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*(achievement_id//8),180,25),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*(achievement_id//8)+1,178,23))
-          draw_text2("???: ???",(320,25*(achievement_id//8)))
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,25),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,23))
+          draw_text2("???: ???",(320,25*((achievement_id-1)//8)))
   
-  draw_text("Unmute" if mute else "Mute",(350,675),15,False) #draw mute/unmute text
+  draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
   
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
@@ -411,21 +412,6 @@ while True: #game loop
           for _ in range(1,17): #for everything in the range
             buy(_) #see if you bought it
           changesurface()
-        
-        if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if click console
-          loop=True #loop is true
-          t.cancel() #cancel timer
-          th.cancel() #cancel timer
-          if fps_track: #if tracking fps
-            tm.cancel() #cancel timer
-          while loop: #while loop
-            finish=False #finish is false
-            threading.Thread(target=command).start() #start command line
-            unblocker() #unblock
-          t.start() #restart timer
-          th.start() #restart timer
-          if fps_track: #if tracking fps
-            tm.start() #restart timer
 
         if mouse_pos[0]<=200 and mouse_pos[1]<=200:
           if rightpanel!="a":
@@ -434,12 +420,26 @@ while True: #game loop
             rightpanel="b"
           changesurface()
         
-        if 300<=mouse_pos[0]<=400 and 650<=mouse_pos[1]<=700: #if mute/unmute
+        if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
           mute=not mute #mute/unmute
     
-    if event.type==pygame.KEYDOWN: #if click down
+    if event.type==pygame.KEYDOWN: #if key down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
         save() #save
+      if event.key==pygame.K_j and (event.mod & pygame.KMOD_CTRL) and (event.mod & pygame.KMOD_SHIFT):
+        loop=True #loop is true
+        t.cancel() #cancel timer
+        th.cancel() #cancel timer
+        if fps_track: #if tracking fps
+          tm.cancel() #cancel timer
+        while loop: #while loop
+          finish=False #finish is false
+          threading.Thread(target=command).start() #start command line
+          unblocker() #unblock
+        t.start() #restart timer
+        th.start() #restart timer
+        if fps_track: #if tracking fps
+          tm.start() #restart timer
   
   t1,t2=time.time(),t1 #change t1 and t2
   
