@@ -161,7 +161,7 @@ def load_save_data(): #load save data
   total_cookies=decimal(file[51])
   multiplier=int(file[52])
   unlock_achievements=bin(int(file[53]))[:-2:-1]
-  ft=timer(int(file[54]),finishfrenzy)
+  ft=timer(int(file[54]),finishfrenzy) if file[54]==0 else timer(0,lambda:None)
   
   while len(unlock_achievements)<len(achievements):
     unlock_achievements="0"+unlock_achievements
@@ -334,6 +334,9 @@ class timer: #class timer
     self.timer.cancel() #cancel
     self.timeleft=self.interval-time.time()+self.starttime
 
+  def howlongleft(self):
+    return self.interval-time.time()+self.starttime
+
 def unlock_achievement(achievement_id,will_print=True):
   global unlock_achievements,achievements_to_unlock
   if will_print:
@@ -372,7 +375,10 @@ class golden:
 
 def frenzy():
   global multiplier,ft
-  multiplier*=7
+  if ft.howlongleft()<=0:
+    multiplier*=7
+  else:
+    del ft
   ft=timer(77,finishfrenzy)
 
 def finishfrenzy():
@@ -491,8 +497,7 @@ while True: #game loop
         th.cancel() #cancel timer
         if fps_track: #if tracking fps
           tm.cancel() #cancel timer
-        if [gc.randout for gc in goldens].count("Frenzy"):
-          ft.cancel()
+        ft.cancel()
         while loop: #while loop
           finish=False #finish is false
           threading.Thread(target=command).start() #start command line
@@ -501,8 +506,7 @@ while True: #game loop
         th.start() #restart timer
         if fps_track: #if tracking fps
           tm.start() #restart timer
-        if [gc.randout for gc in goldens].count("Frenzy"):
-          ft.start()
+        ft.start()
   
   t1,t2=time.time(),t1 #change t1 and t2
   
