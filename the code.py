@@ -187,9 +187,9 @@ def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
     surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0],pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
 
 def draw_text2(text,pos,size=(180,25)):
-  x=pygame.font.SysFont("arial",15).render(text,True,black)
+  x=pygame.font.SysFont("arial",22).render(text,True,black)
   if x.get_width()<=size[0]:
-    draw_text(text,(pos[0],pos[1]+size[1]//2),15)
+    draw_text(text,(pos[0],pos[1]+size[1]//2),22)
   else:
     screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",1000).render(text,True,black),size),pos)
 
@@ -377,15 +377,17 @@ while True: #game loop
       if unlock_achievements[achievement_id-1]=="1":
         screen.blit(icon,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
         if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,25),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,23))
-          draw_text2(f"{name}: {desc}",(320,25*((achievement_id-1)//8)))
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48))
+          draw_text2(f"{name}:",(320,25*((achievement_id-1)//8)))
+          draw_text2(f"{desc}",(320,25*((achievement_id-1)//8+1)))
       else:
         screen.blit(question,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
         if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,25),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,23))
-          draw_text2("???: ???",(320,25*((achievement_id-1)//8)))
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1)
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48))
+          draw_text2("???:",(320,25*((achievement_id-1)//8)))
+          draw_text2("???",(320,25*((achievement_id-1)//8+1)))
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
   
