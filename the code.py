@@ -37,22 +37,23 @@ buy1=pygame.mixer.Sound("sounds/buy1.wav") #buy sound 1
 buy2=pygame.mixer.Sound("sounds/buy2.wav") #buy sound 2
 buy3=pygame.mixer.Sound("sounds/buy3.wav") #buy sound 3
 buy4=pygame.mixer.Sound("sounds/buy4.wav") #buy sound 4
-gold_sound=pygame.mixer.Sound("sounds/golden.wav")
+gold_sound=pygame.mixer.Sound("sounds/golden.wav") #golden cookie sound
 
 x=None #set x to be nothing
 
-rightpanel="b"
+rightpanel="b" #what's on the right panel
 
 mute=False #set mute to false
 
-question=pygame.image.load("pictures/question.png")
-achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]")]
-achievements_to_unlock=achievements[:]
+question=pygame.image.load("pictures/question.png") #question mark
+achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]")] #the achievements
+achievements_to_unlock=achievements[:] #the non-unlocked achievements
 
-goldens=[]
+goldens=[] #on-screen golden cookies
 
-upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f] for a,b,c,d,e,f in eval("["+open("upgrades.txt").read().replace("]","],")+"]")]
-upgrades_to_unlock=upgrades[:]
+upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval("["+open("upgrades.txt").read().replace("]","],")+"]")] #the upgrades
+upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
+
 ################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -95,7 +96,9 @@ def clear_cookies(): #clear cookies
   file=open("save data.txt","w") #open the file
   file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0") #write to file
   file.close() #close file
-  achievements_to_unlock=achievements[:]
+  
+  achievements_to_unlock=achievements[:] #reset achievements
+  
   load_save_data() #load save data
 
 def load_save_data(): #load save data
@@ -167,14 +170,13 @@ def load_save_data(): #load save data
   bought_upgrades=bin(int(file[55]))[:-2:-1]
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   
-  
-  while len(unlock_achievements)<len(achievements):
-    unlock_achievements="0"+unlock_achievements
+  while len(unlock_achievements)<len(achievements): #keep adding zeroes until there is enough
+    unlock_achievements+="0"
 
   achievement_id=1
-  for achievement_unlocked in unlock_achievements:
-    if int(achievement_unlocked):
-      achievements_to_unlock[achievement_id-1]=[]
+  for achievement_unlocked in unlock_achievements: #for every achievement
+    if int(achievement_unlocked): #if you unlocked it
+      achievements_to_unlock[achievement_id-1:achievement_id]=[] #get rid of it in achievements to unlock
 
 def play_random_click(): #play random click sound
   a=random.randint(1,7) #set a to a random number
@@ -198,11 +200,11 @@ def draw_text(text,pos,size=8,side=True,surface=screen): #draw text
     surface.blit(pygame.font.SysFont("arial",size).render(text,True,black),(pos[0],pos[1]-pygame.font.SysFont("arial",size).render(text,True,black).get_height()/2)) #draw it
 
 def draw_text2(text,pos,size=(180,25)):
-  x=pygame.font.SysFont("arial",22).render(text,True,black)
-  if x.get_width()<=size[0]:
-    draw_text(text,(pos[0],pos[1]+size[1]//2),22)
-  else:
-    screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",100).render(text,True,black),size),pos)
+  x=pygame.font.SysFont("arial",22).render(text,True,black) #this is the text surface
+  if x.get_width()<=size[0]: #if its not too wide
+    draw_text(text,(pos[0],pos[1]+size[1]//2),22) #draw text
+  else: #if its to wide
+    screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",100).render(text,True,black),size),pos) #draw text
 
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
@@ -277,10 +279,11 @@ def command(): #command
   finish=True #finish
 
 def changesurface():
-  #these are all text that either never changes of changes when a building is bought
-  surface.fill(white)
+  #these are text that change when a building is bought
+  surface.fill(white) #fill with white
 
-  if rightpanel=="b":
+  if rightpanel=="b": #if building mode
+    #building text
     draw_text(f"Cursor, cost {numbershortener(bc1)}, have {b1}",(500,22),surface=surface)
     draw_text(f"Grandma, cost {numbershortener(bc2)}, have {b2}",(500,66),surface=surface)
     draw_text(f"Farm, cost {numbershortener(bc3)}, have {b3}",(500,109),surface=surface)
@@ -297,20 +300,21 @@ def changesurface():
     draw_text(f"Prism, cost {numbershortener(bc14)}, have {b14}",(500,591),surface=surface)
     draw_text(f"Chancemaker, cost {numbershortener(bc15)}, have {b15}",(500,634),surface=surface)
     draw_text(f"Fractal Engine, cost {numbershortener(bc16)}, have {b16}",(500,678),surface=surface)
-    draw_lines()
+    draw_lines() #building seperating lines
 
-def draw():
-  surface2.fill(white)
+def draw(): #these never change
+  surface2.fill(white) #fill with white
 
   pygame.draw.rect(surface2,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(surface2,black,pygame.Rect(499,0,2,700)) #draw filler 2
+  
   pygame.draw.rect(surface2,black,pygame.Rect(300,500,100,100),1) #draw mute/unmute box
 
-  draw_text("Achivevements",(100,50),15,False,surface2)
-  pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2))
+  draw_text("Achivevements",(100,50),15,False,surface2) #achievements
+  pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2)) #achievement line
 
-  draw_text("Upgrades",(100,150),15,False,surface2)
-  pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
+  draw_text("Upgrades",(100,150),15,False,surface2) #upgrades
+  pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2)) #upgrade line
 
 def track_fps(): #track fps
   global tm #global timer
@@ -323,121 +327,142 @@ def track_fps(): #track fps
 class timer: #class timer
   def __init__(self,interval,func): #def __init__
     self.interval=interval #interval
-    self.timeleft=interval
+    self.timeleft=interval #time left
     self.func=func #and function to call
-    self.starttime=time.time()
-    self.settimer()
+    self.starttime=time.time() #the time the timer started
+    self.settimer() #set the timer
   
   def settimer(self): #set the timer
     self.timer=threading.Timer(self.timeleft,self.func) #set the timer
   
   def start(self): #def start
-    self.settimer()
+    self.settimer() #set the timer
+    
     self.timer.start() #and start
-    self.starttime=time.time()
+    
+    self.starttime=time.time() #set the start time
   
   def cancel(self): #def cancel timer
     self.timer.cancel() #cancel
-    self.timeleft=self.interval-time.time()+self.starttime
+    
+    self.timeleft=self.interval-time.time()+self.starttime #set how long the timer has left
 
-  def howlongleft(self):
-    return self.interval-time.time()+self.starttime
+  def howlongleft(self): #how long left
+    return self.interval-time.time()+self.starttime #how long the timer has left
 
-def unlock_achievement(achievement_id,will_print=True):
-  global unlock_achievements,achievements_to_unlock
-  if will_print:
-    print(f"Achievement: {achievements[[a for _,_,_,a,_ in achievements].index(achievement_id)][1]}")
-  list_unlock_achievements=list(unlock_achievements)
-  list_unlock_achievements[achievement_id-1]="1"
-  unlock_achievements="".join(list_unlock_achievements)
-  achievements_to_unlock[[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id):[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id)+1]=[]
-
-def debug_game():
-  for achievement_id in range(1,len(achievements)+1):
-    unlock_achievement(achievement_id,False)
-
-class golden:
-  def __init__(self):
-    self.pos=[random.randint(0,608),random.randint(0,608)]
-    self.randout=random.choice(["Lucky","Frenzy"])
-    self.timestart=time.time()
+def unlock_achievement(achievement_id,will_print=True): #unlock achievement
+  global unlock_achievements,achievements_to_unlock #globals
   
-  def check(self):
-    if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])):
-      return True      
+  if will_print: #if will print
+    print(f"Achievement: {achievements[[a for _,_,_,a,_ in achievements].index(achievement_id)][1]}") #print achievement unlocked
   
-  def effect(self):
-    if self.randout=="Lucky":
-      global cookies,total_cookies
-      cookies+=15+min(round(decimal(0.15)*cookies),900*cps)
-      total_cookies+=15+min(round(decimal(0.15)*cookies),900*cps)
-    if self.randout=="Frenzy":
-      frenzy()
+  list_unlock_achievements=list(unlock_achievements) #list is the list of the string
   
-  def draw(self):
-    screen.blit(gold_cookie,self.pos)
-    if time.time()>=self.timestart+15:
-      goldens.remove(self)
+  list_unlock_achievements[achievement_id-1]="1" #change to 1
+  
+  unlock_achievements="".join(list_unlock_achievements) #join back
+  
+  achievements_to_unlock[[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id):[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id)+1]=[] #delete it in achievements to unlock
 
-def frenzy():
-  global multiplier,ft
-  if ft.howlongleft()<=0:
-    multiplier*=7
-  else:
-    del ft
+def debug(): #define debug
+  global cookies,total_cookies #global variavles
+  
+  for achievement_id in range(1,len(achievements)+1): #for every achievement
+    unlock_achievement(achievement_id,False) #unlock it
+  
+  cookies=decimal("Infinity") #infinite cookies
+  total_cookies=decimal("Infinity") #infinite total cookies
+
+class golden: #class golden cookie
+  def __init__(self): #define init
+    self.pos=[random.randint(0,608),random.randint(0,608)] #position
+    self.randout=random.choice(["Lucky","Frenzy"]) #random outcome
+    self.timestart=time.time() #the time it appeared
+  
+  def check(self): #check if the pointer is on it
+    if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])): #if its on
+      return True #return true
+  
+  def effect(self): #define effect
+    if self.randout=="Lucky": #if it is lucky
+      global cookies,total_cookies #global variables
+      
+      cookies+=15+min(round(decimal(0.15)*cookies),900*cps) #add to cookies
+      total_cookies+=15+min(round(decimal(0.15)*cookies),900*cps) #add to total cookies
+    
+    if self.randout=="Frenzy": #if its frenzy
+      frenzy() #then frenzy
+  
+  def draw(self): #draw itself
+    screen.blit(gold_cookie,self.pos) #draw
+    if time.time()>=self.timestart+15: #if has run out of time
+      goldens.remove(self) #delete it
+
+def frenzy(): #frenzy function
+  global multiplier,ft #global variables
+  
+  if ft.howlongleft()<=0: #if there is no current frenzy effect
+    multiplier*=7 #multiply by 7
+  else: #if there is a current frenzy effect
+    del ft #replace ft
+  
   ft=timer(77,finishfrenzy)
 
-def finishfrenzy():
-  global multiplier
-  multiplier=round(multiplier/7)
+def finishfrenzy(): #define finishfrenzy
+  global multiplier #global multiplier
+  
+  multiplier=round(multiplier/7) #decrease multiplier
 
-def spawn_golden():
-  global goldens
-  x=golden()
-  goldens+=[x]
-  gold_sound.play()
+def spawn_golden(): #spawn golden
+  global goldens #global goldens
+  
+  goldens+=[golden()] #add a golden cookie to goldens
+  
+  gold_sound.play() #play sound
 
-def golden_timer():
-  spawn_golden()
-  gt=timer(60,golden_timer)
-  gt.start()
+def golden_timer(): #timer to make golden cookies
+  spawn_golden() #spawn a cookie
+  
+  gt=timer(60,golden_timer) #gt is a timer
+  gt.start() #start it
 
 ################################################################################
 load_save_data() #load save data
+
 add_cookies() #add cookies
+
 th=timer(60,autosave) #the autosaving timer
 th.start() #start timer
+
 changesurface() #change the surface (actually make the surface)
-draw()
+draw() #draw the non-changing surface
+
 t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
-gt=timer(60,golden_timer)
-gt.start()
-while True: #game loop
-  try:
-    x=0
-    for unlock_cond,name,_,achievement_id,_ in achievements_to_unlock:
-      if eval(unlock_cond):
-        print(f"Achivement: {name}")
-        list_unlock_achievements=list(unlock_achievements)
-        list_unlock_achievements[achievement_id-1]="1"
-        unlock_achievements="".join(list_unlock_achievements)
-        achievements_to_unlock[x:x+1]=[]
-      x+=1
-  except:
-    pass
 
-  try:
-    x=0
-    for _,unlock_cond,name,_,upgrade_id,_ in upgrades_to_unlock:
-      if eval(unlock_cond):
-        list_unlocked_upgrades=list(unlocked_upgrades)
-        list_unlocked_upgrades[upgrade_id-1]="1"
-        unlocked_upgrades="".join(list_unlocked_upgrades)
-        upgrades_to_unlock[x:x+1]=[]
-      x+=1
-  except:
-    pass
+gt=timer(60,golden_timer) #the golden cookie timer
+gt.start() #start it
+
+while True: #game loop
+  for unlock_cond,_,_,achievement_id,_ in achievements_to_unlock: #for every achievement
+    if eval(unlock_cond): #if the condition is true
+      unlock_achievement(achievement_id) #get the achievement
+  
+  try: #try to
+    x=0 #place in upgrades to unlock
+    
+    for _,unlock_cond,name,_,upgrade_id,_,_ in upgrades_to_unlock: #for every upgrade
+      if eval(unlock_cond): #if the condition is true
+        list_unlocked_upgrades=list(unlocked_upgrades) #list it
+        
+        list_unlocked_upgrades[upgrade_id-1]="1" #unlock it
+        
+        unlocked_upgrades="".join(list_unlocked_upgrades) #join it back
+        
+        upgrades_to_unlock[x:x+1]=[] #delete it in upgrades to unlock
+      x+=1 #increment by 1 for the next upgrade
+  except: #if something went wrong
+    pass #pass
       
   screen.fill(white) #fill screen with white
   
@@ -447,46 +472,67 @@ while True: #game loop
     draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
   draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
-  screen.blit(big_cookie,(225,225)) #draw big cookie
-  screen.blit(surface,(0,0))
-  screen.blit(surface2,(0,0))
-
-  cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   
-  if rightpanel=="a":
-    for _,name,icon,achievement_id,desc in achievements:
-      if unlock_achievements[achievement_id-1]=="1":
-        screen.blit(icon,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
-        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48))
-          draw_text2(f"{name}:",(320,25*((achievement_id-1)//8)))
-          draw_text2(f"{desc}",(320,25*((achievement_id-1)//8+1)))
-      else:
-        screen.blit(question,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8)))
-        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8):
-          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1)
-          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48))
-          draw_text2("???:",(320,25*((achievement_id-1)//8)))
-          draw_text2("???",(320,25*((achievement_id-1)//8+1)))
+  screen.blit(big_cookie,(225,225)) #draw big cookie
+  
+  screen.blit(surface,(0,0)) #draw the first surface
+  screen.blit(surface2,(0,0)) #draw the second surface
 
-  if rightpanel=="u":
-    for effect,name,icon,upgrade_id,desc in [(a,b,c,d,e) for a,_,b,c,d,e in upgrades if unlocked_upgrades[d-1]=="1"]:
-      screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8)))
-      if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8):
-        if pygame.mouse.get_pressed()!=(0,0,0): #if you click
-          exec(effect)
-          upgrades[[d for _,_,_,_,d,_ in upgrades].index(upgrade_id):[d for _,_,_,_,d,_ in upgrades].index(upgrade_id)+1]=[]
-          bought_upgrades[upgrade_id-1]="1"
-        pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((upgrade_id-1)//8),180,50),1)
-        pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((upgrade_id-1)//8)+1,178,48))
-        draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8)))
-        draw_text2(f"{desc}",(320,25*((upgrade_id-1)//8+1)))
+  cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100 #calculate cps
+  
+  if rightpanel=="a": #achievements right panel
+    for _,name,icon,achievement_id,desc in achievements: #for every achievement
+      if unlock_achievements[achievement_id-1]=="1": #if you unlocked it
+        screen.blit(icon,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8))) #draw the icon
         
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8): #if you hover over it
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1) #draw the outline
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48)) #draw the gray inside
+          
+          draw_text2(f"{name}:",(320,25*((achievement_id-1)//8))) #draw the name
+          draw_text2(f"{desc}",(320,25*((achievement_id-1)//8+1))) #draw the description
+      else: #if you didn't unlock it
+        screen.blit(question,(500+25*((achievement_id-1)%8),25*((achievement_id-1)//8))) #draw the question mark
+        
+        if 500+25*((achievement_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((achievement_id-1)%8) and 25*((achievement_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((achievement_id-1)//8): #if you hover over it
+          pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((achievement_id-1)//8),180,50),1) #draw the outline
+          pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48)) #draw the gray inside
+          
+          draw_text2("???:",(320,25*((achievement_id-1)//8))) #question marks
+          draw_text2("???",(320,25*((achievement_id-1)//8+1))) #question marks
+
+  if rightpanel=="u": #upgrade right panel
+    for effect,name,icon,upgrade_id,desc,price in [(a,b,c,d,e,f) for a,_,b,c,d,e,f in upgrades if unlocked_upgrades[d-1]=="1"]: #for every unlocked upgrade
+      screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8))) #draw its icon
+      
+      if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8): #if you hover over it
+        if pygame.mouse.get_pressed()!=(0,0,0) and cookies>=price: #if you click and you have enough cookies
+          exec(effect) #execute its effect
+          
+          list_bought_upgrades=list(bought_upgrades) #list it
+          
+          list_bought_upgrades[upgrade_id-1]="1" #buy it
+        
+          bought_upgrades="".join(list_bought_upgrades) #join it back
+
+          list_unlocked_upgrades=list(unlocked_upgrades) #list it
+          
+          list_unlocked_upgrades[upgrade_id-1]="0" #buy it aka lock it
+        
+          unlocked_upgrades="".join(list_unlocked_upgrades) #join it back
+          
+          cookies-=price #get rid of some cookies
+          
+        pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((upgrade_id-1)//8),180,75),1) #outline
+        pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((upgrade_id-1)//8)+1,178,73)) #filling
+        
+        draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8))) #name text
+        draw_text2(f"{desc}",(320,25*((upgrade_id-1)//8+1))) #description
+        draw_text2(f"Price: {price}",(320,25*((upgrade_id-1)//8+2))) #price
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
 
-  [gc.draw() for gc in goldens]
+  [gc.draw() for gc in goldens] #draw every current golden cookie
   
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
@@ -499,7 +545,7 @@ while True: #game loop
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
         mouse_pos=pygame.mouse.get_pos() #set mouse_pos to mouse position
-        if not sum([int(bool(gc.check())) for gc in goldens]):
+        if not sum([int(bool(gc.check())) for gc in goldens]): #if you are not clicking on a colden cookie
           if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
             cookies+=cpc #add cpc to cookies
             total_cookies+=cpc #add cpc to total cookies
@@ -510,41 +556,44 @@ while True: #game loop
           if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
             for _ in range(1,17): #for everything in the range
               buy(_) #see if you bought it
-            changesurface()
+            
+            changesurface() #change the surface
 
-          if mouse_pos[0]<=200 and mouse_pos[1]<=100:
-            if rightpanel!="a":
-              rightpanel="a"
-            else:
-              rightpanel="b"
-            changesurface()
+          if mouse_pos[0]<=200 and mouse_pos[1]<=100: #clicking on achievements
+            if rightpanel!="a":  #if not on achievements mode
+              rightpanel="a" #go to achievements mode
+            else: #if you are already on
+              rightpanel="b" #back to buildings
+            
+            changesurface() #change the surface
 
-          if mouse_pos[0]<=200 and 100<=mouse_pos[1]<=200:
-            if rightpanel!="u":
-              rightpanel="u"
-            else:
-              rightpanel="b"
-            changesurface()
+          if mouse_pos[0]<=200 and 100<=mouse_pos[1]<=200: #upgrades mode
+            if rightpanel!="u": #if not on upgrades mode
+              rightpanel="u" #go to upgrades mode
+            else: #if on upgrades mode
+              rightpanel="b" #go to buildings mode
+            
+            changesurface() #change the surface
           
           if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
             mute=not mute #mute/unmute
 
-        for gc in goldens[::-1]:
-          if gc.check():
-            gc.effect()
-            goldens.remove(gc)
-            break
+        for gc in goldens[::-1]: #for every golden cookie
+          if gc.check(): #if clicking on it
+            gc.effect() #do its effect
+            goldens.remove(gc) #remove it
+            break #break out of the loop so it doesn't click on another cookie
     
     if event.type==pygame.KEYDOWN: #if key down
       if event.key==pygame.K_s and (event.mod & pygame.KMOD_CTRL): #if you press ctrl-s
         save() #save
-      if event.key==pygame.K_j and (event.mod & pygame.KMOD_CTRL) and (event.mod & pygame.KMOD_SHIFT):
+      if event.key==pygame.K_j and (event.mod & pygame.KMOD_CTRL) and (event.mod & pygame.KMOD_SHIFT): #if you press ctrl-shift-j (command line)
         loop=True #loop is true
         t.cancel() #cancel timer
         th.cancel() #cancel timer
         if fps_track: #if tracking fps
           tm.cancel() #cancel timer
-        ft.cancel()
+        ft.cancel() #cancel timer
         while loop: #while loop
           finish=False #finish is false
           threading.Thread(target=command).start() #start command line
@@ -553,7 +602,7 @@ while True: #game loop
         th.start() #restart timer
         if fps_track: #if tracking fps
           tm.start() #restart timer
-        ft.start()
+        ft.start() #restart timer
   
   t1,t2=time.time(),t1 #change t1 and t2
   
