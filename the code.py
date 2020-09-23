@@ -53,7 +53,6 @@ goldens=[]
 
 upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f] for a,b,c,d,e,f in eval("["+open("upgrades.txt").read().replace("]","],")+"]")]
 upgrades_to_unlock=upgrades[:]
-upgrades_buyable=[]
 ################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -478,6 +477,7 @@ while True: #game loop
         if pygame.mouse.get_pressed()!=(0,0,0): #if you click
           exec(effect)
           upgrades[[d for _,_,_,_,d,_ in upgrades].index(upgrade_id):[d for _,_,_,_,d,_ in upgrades].index(upgrade_id)+1]=[]
+          bought_upgrades[upgrade_id-1]="1"
         pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((upgrade_id-1)//8),180,50),1)
         pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((upgrade_id-1)//8)+1,178,48))
         draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8)))
