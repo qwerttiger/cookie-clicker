@@ -51,6 +51,9 @@ achievements_to_unlock=achievements[:]
 
 goldens=[]
 
+upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f] for a,b,c,d,e,f in eval("["+open("upgrades.txt").read().replace("]","],")+"]")]
+upgrades_to_unlock=upgrades[:]
+upgrades_buyable=[]
 ################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -91,18 +94,18 @@ def buy(num): #buy building number num
 def clear_cookies(): #clear cookies
   global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0") #write to file
   file.close() #close file
   achievements_to_unlock=achievements[:]
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n0\n1\n0\n100\n0\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -156,12 +159,15 @@ def load_save_data(): #load save data
   bp15=decimal(file[46])
   bp16=decimal(file[47])
   cookies=decimal(file[48])
-  cps=decimal(file[49])
-  cpc=int(file[50])
-  total_cookies=decimal(file[51])
-  multiplier=int(file[52])
-  unlock_achievements=bin(int(file[53]))[:-2:-1]
-  ft=timer(int(file[54]),finishfrenzy) if file[54]==0 else timer(0,lambda:None)
+  cpc=int(file[49])
+  total_cookies=decimal(file[50])
+  multiplier=int(file[51])
+  unlock_achievements=bin(int(file[52]))[:-2:-1]
+  ft=timer(int(file[53]),finishfrenzy) if file[53]!="0" else timer(0,lambda:None)
+  unlocked_upgrades=bin(int(file[54]))[:-2:-1]
+  bought_upgrades=bin(int(file[55]))[:-2:-1]
+  cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
+  
   
   while len(unlock_achievements)<len(achievements):
     unlock_achievements="0"+unlock_achievements
@@ -225,7 +231,7 @@ def inputcommand(): #input
 
 def save(autosave=False):
   ft.cancel()
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft)]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2)]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -303,8 +309,8 @@ def draw():
   draw_text("Achivevements",(100,50),15,False,surface2)
   pygame.draw.rect(surface2,black,pygame.Rect(0,99,200,2))
 
-  #draw_text("Stats",(100,150),15,False,surface2)
-  #pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
+  draw_text("Upgrades",(100,150),15,False,surface2)
+  pygame.draw.rect(surface2,black,pygame.Rect(0,199,200,2))
 
 def track_fps(): #track fps
   global tm #global timer
@@ -366,8 +372,8 @@ class golden:
   def effect(self):
     if self.randout=="Lucky":
       global cookies,total_cookies
-      cookies+=15+min(round(decimal(0.15)*cookies),15*cps)
-      total_cookies+=15+min(round(decimal(0.15)*cookies),15*cps)
+      cookies+=15+min(round(decimal(0.15)*cookies),900*cps)
+      total_cookies+=15+min(round(decimal(0.15)*cookies),900*cps)
     if self.randout=="Frenzy":
       frenzy()
   
@@ -423,6 +429,18 @@ while True: #game loop
       x+=1
   except:
     pass
+
+  try:
+    x=0
+    for _,unlock_cond,name,_,upgrade_id,_ in upgrades_to_unlock:
+      if eval(unlock_cond):
+        list_unlocked_upgrades=list(unlocked_upgrades)
+        list_unlocked_upgrades[upgrade_id-1]="1"
+        unlocked_upgrades="".join(list_unlocked_upgrades)
+        upgrades_to_unlock[x:x+1]=[]
+      x+=1
+  except:
+    pass
       
   screen.fill(white) #fill screen with white
   
@@ -431,10 +449,12 @@ while True: #game loop
   else: #if infinity cookies
     draw_text(f"{numbershortener(decimal('infinity'))} cookies",(350,100),25,False) #draw text
   
-  draw_text(f"CpS: {numbershortener(cps*multiplier/100)}",(350,150),18,False) #draw cps
+  draw_text(f"CpS: {numbershortener(cps)}",(350,150),18,False) #draw cps
   screen.blit(big_cookie,(225,225)) #draw big cookie
   screen.blit(surface,(0,0))
   screen.blit(surface2,(0,0))
+
+  cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   
   if rightpanel=="a":
     for _,name,icon,achievement_id,desc in achievements:
@@ -452,6 +472,19 @@ while True: #game loop
           pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((achievement_id-1)//8)+1,178,48))
           draw_text2("???:",(320,25*((achievement_id-1)//8)))
           draw_text2("???",(320,25*((achievement_id-1)//8+1)))
+
+  if rightpanel=="u":
+    for effect,name,icon,upgrade_id,desc in [(a,b,c,d,e) for a,_,b,c,d,e in upgrades if unlocked_upgrades[d-1]=="1"]:
+      screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8)))
+      if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8):
+        if pygame.mouse.get_pressed()!=(0,0,0): #if you click
+          exec(effect)
+          upgrades[[d for _,_,_,_,d,_ in upgrades].index(upgrade_id):[d for _,_,_,_,d,_ in upgrades].index(upgrade_id)+1]=[]
+        pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((upgrade_id-1)//8),180,50),1)
+        pygame.draw.rect(screen,(128,128,128),pygame.Rect(321,25*((upgrade_id-1)//8)+1,178,48))
+        draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8)))
+        draw_text2(f"{desc}",(320,25*((upgrade_id-1)//8+1)))
+        
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
 
@@ -466,7 +499,6 @@ while True: #game loop
         tm.cancel() #cancel timer
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
-      
       if event.button in [1,2,3]: #if you click and not scroll
         mouse_pos=pygame.mouse.get_pos() #set mouse_pos to mouse position
         if not sum([int(bool(gc.check())) for gc in goldens]):
@@ -482,9 +514,16 @@ while True: #game loop
               buy(_) #see if you bought it
             changesurface()
 
-          if mouse_pos[0]<=200 and mouse_pos[1]<=200:
+          if mouse_pos[0]<=200 and mouse_pos[1]<=100:
             if rightpanel!="a":
               rightpanel="a"
+            else:
+              rightpanel="b"
+            changesurface()
+
+          if mouse_pos[0]<=200 and 100<=mouse_pos[1]<=200:
+            if rightpanel!="u":
+              rightpanel="u"
             else:
               rightpanel="b"
             changesurface()

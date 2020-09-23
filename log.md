@@ -1,9 +1,8 @@
 currently working on:
-golden cookies
+upgrades
 ---
 gonna work on:
 milk
-upgrades
 ascend
 sugar lump
 seasons
@@ -71,3 +70,4 @@ WAY better achievements (v1.55)
 20200922:
 2 line achievements (v1.62)
 **golden cookies part 1 (v1.70)**
+**golden cookies part 2 (v1.80)**

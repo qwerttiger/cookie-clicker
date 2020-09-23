@@ -1,1 +1,1 @@
-most art by cookie clicker, all code by me.
+all art by cookie clicker, all code by me.
