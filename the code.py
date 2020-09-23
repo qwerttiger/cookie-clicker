@@ -357,6 +357,7 @@ class golden:
   def __init__(self):
     self.pos=[random.randint(0,608),random.randint(0,608)]
     self.randout=random.choice(["Lucky","Frenzy"])
+    self.timestart=time.time()
   
   def check(self):
     if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])):
@@ -365,13 +366,15 @@ class golden:
   def effect(self):
     if self.randout=="Lucky":
       global cookies,total_cookies
-      cookies+=13+min(round(decimal(0.15)*cookies),15*cps)
-      total_cookies+=13+min(round(decimal(0.15)*cookies),15*cps)
+      cookies+=15+min(round(decimal(0.15)*cookies),15*cps)
+      total_cookies+=15+min(round(decimal(0.15)*cookies),15*cps)
     if self.randout=="Frenzy":
       frenzy()
   
   def draw(self):
     screen.blit(gold_cookie,self.pos)
+    if time.time()>=self.timestart+15:
+      goldens.remove(self)
 
 def frenzy():
   global multiplier,ft
@@ -391,6 +394,11 @@ def spawn_golden():
   goldens+=[x]
   gold_sound.play()
 
+def golden_timer():
+  spawn_golden()
+  gt=timer(60,golden_timer)
+  gt.start()
+
 ################################################################################
 load_save_data() #load save data
 add_cookies() #add cookies
@@ -400,6 +408,8 @@ changesurface() #change the surface (actually make the surface)
 draw()
 t1=time.time() #t1 is the time
 tm=timer(1,track_fps) #fps timer but don't start it
+gt=timer(60,golden_timer)
+gt.start()
 while True: #game loop
   try:
     x=0
