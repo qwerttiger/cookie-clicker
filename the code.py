@@ -203,7 +203,7 @@ def draw_text2(text,pos,size=(180,25)):
   if x.get_width()<=size[0]:
     draw_text(text,(pos[0],pos[1]+size[1]//2),22)
   else:
-    screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",1000).render(text,True,black),size),pos)
+    screen.blit(pygame.transform.smoothscale(pygame.font.SysFont("arial",100).render(text,True,black),size),pos)
 
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
@@ -267,7 +267,8 @@ def command(): #command
     loop=False #break out of loop
   else: #else
     try: #try to
-      print("Output:",eval(x,globals())) if eval(x,globals())!=None else exec(x,globals()) #output
+      y=eval(x,globals())
+      print("Output:",y) if y!=None else None #output
     except: #if that didn't work
       try: #then
         exec(x,globals()) #do this
@@ -353,11 +354,8 @@ def unlock_achievement(achievement_id,will_print=True):
   achievements_to_unlock[[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id):[a for _,_,_,a,_ in achievements_to_unlock].index(achievement_id)+1]=[]
 
 def debug_game():
-  try:
-    for achievement_id in range(1,len(achievements)+1):
-      unlock_achievement(achievement_id,False)
-  except:
-    pass
+  for achievement_id in range(1,len(achievements)+1):
+    unlock_achievement(achievement_id,False)
 
 class golden:
   def __init__(self):
