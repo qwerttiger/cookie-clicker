@@ -46,12 +46,12 @@ rightpanel="b" #what's on the right panel
 mute=False #set mute to false
 
 question=pygame.image.load("pictures/question.png") #question mark
-achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]")] #the achievements
+achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy")] #the achievements
 achievements_to_unlock=achievements[:] #the non-unlocked achievements
 
 goldens=[] #on-screen golden cookies
 
-upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval("["+open("upgrades.txt").read().replace("]","],")+"]")] #the upgrades
+upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval("["+open("upgrades.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy")] #the upgrades
 upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
 
 ################################################################################
@@ -479,6 +479,7 @@ while True: #game loop
   screen.blit(surface2,(0,0)) #draw the second surface
 
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100 #calculate cps
+  cps_not_including_frenzy=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100/(7 if ft.timeleft()>=0 else 1) #calculate cps
   
   if rightpanel=="a": #achievements right panel
     for _,name,icon,achievement_id,desc in achievements: #for every achievement
@@ -528,7 +529,7 @@ while True: #game loop
         
         draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8))) #name text
         draw_text2(f"{desc}",(320,25*((upgrade_id-1)//8+1))) #description
-        draw_text2(f"Price: {price}",(320,25*((upgrade_id-1)//8+2))) #price
+        draw_text2(f"Price: {numbershortenter(price)}",(320,25*((upgrade_id-1)//8+2))) #price
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
 
@@ -604,6 +605,7 @@ while True: #game loop
           tm.start() #restart timer
         ft.start() #restart timer
   
-  t1,t2=time.time(),t1 #change t1 and t2
+  if fps_track:
+    t1,t2=time.time(),t1 #change t1 and t2
   
   pygame.display.update() #update pygame
