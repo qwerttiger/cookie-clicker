@@ -71,3 +71,12 @@ WAY better achievements (v1.55)
 2 line achievements (v1.62)
 **golden cookies part 1 (v1.70)**
 **golden cookies part 2 (v1.80)**
+
+20200923:
+**upgrades part 1 (v1.90)**
+
+20200926:
+**MORE UPGRADES (v2.00)**
+
+20201004:
+upgrades fix (v2.02)

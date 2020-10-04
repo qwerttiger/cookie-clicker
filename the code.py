@@ -46,14 +46,16 @@ rightpanel="b" #what's on the right panel
 mute=False #set mute to false
 
 question=pygame.image.load("pictures/question.png") #question mark
-achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval("["+open("achievements.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy")] #the achievements
+achievements=[[a,b,pygame.image.load("pictures/"+c+".png"),d,e] for a,b,c,d,e in eval(("["+open("achievements.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy"))] #the achievements
 achievements_to_unlock=achievements[:] #the non-unlocked achievements
 
 goldens=[] #on-screen golden cookies
 
-upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval("["+open("upgrades.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy")] #the upgrades
+upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval(("["+open("upgrades.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy"))] #the upgrades
 upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
 
+bluebackground=pygame.Surface((700,700))
+bluebackground.fill((0,0,255))
 ################################################################################
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -102,7 +104,7 @@ def clear_cookies(): #clear cookies
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
@@ -169,9 +171,13 @@ def load_save_data(): #load save data
   unlocked_upgrades=bin(int(file[54]))[:-2:-1]
   bought_upgrades=bin(int(file[55]))[:-2:-1]
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
+  cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1)
   
   while len(unlock_achievements)<len(achievements): #keep adding zeroes until there is enough
     unlock_achievements+="0"
+
+  while len(unlocked_upgrades)<len(upgrades): #keep adding zeroes until there is enough
+    unlocked_upgrades+="0"
 
   achievement_id=1
   for achievement_unlocked in unlock_achievements: #for every achievement
@@ -303,7 +309,7 @@ def changesurface():
     draw_lines() #building seperating lines
 
 def draw(): #these never change
-  surface2.fill(white) #fill with white
+  surface2.fill(white)
 
   pygame.draw.rect(surface2,black,pygame.Rect(199,0,2,700)) #draw filler 1
   pygame.draw.rect(surface2,black,pygame.Rect(499,0,2,700)) #draw filler 2
@@ -425,7 +431,6 @@ def golden_timer(): #timer to make golden cookies
   
   gt=timer(60,golden_timer) #gt is a timer
   gt.start() #start it
-
 ################################################################################
 load_save_data() #load save data
 
@@ -463,9 +468,8 @@ while True: #game loop
       x+=1 #increment by 1 for the next upgrade
   except: #if something went wrong
     pass #pass
-      
-  screen.fill(white) #fill screen with white
-  
+
+  screen.fill(white)
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
   else: #if infinity cookies
@@ -479,7 +483,7 @@ while True: #game loop
   screen.blit(surface2,(0,0)) #draw the second surface
 
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100 #calculate cps
-  cps_not_including_frenzy=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100/(7 if ft.timeleft()>=0 else 1) #calculate cps
+  cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1) #calculate cps
   
   if rightpanel=="a": #achievements right panel
     for _,name,icon,achievement_id,desc in achievements: #for every achievement
@@ -529,7 +533,7 @@ while True: #game loop
         
         draw_text2(f"{name}:",(320,25*((upgrade_id-1)//8))) #name text
         draw_text2(f"{desc}",(320,25*((upgrade_id-1)//8+1))) #description
-        draw_text2(f"Price: {numbershortenter(price)}",(320,25*((upgrade_id-1)//8+2))) #price
+        draw_text2(f"Price: {numbershortener(price)}",(320,25*((upgrade_id-1)//8+2))) #price
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
 

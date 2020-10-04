@@ -27,6 +27,6 @@
 ["bp14*=2","b14>=1","Gem polish","prism1",27,"Prisms are twice as effective",21000000000000000]
 ["bp14*=2","b14>=1","9th colour","prism2",28,"Prisms are twice as effective",105000000000000000]
 ["bp15*=2","b15>=1","Your lucky cookie","chancemaker1",29,"Chancemakers are twice as effective",260000000000000000]
-["bp15*=2","b15>=1",""All bets are off" magic coin","chancemaker2",30,"Chancemakers are twice as effective",1300000000000000000]
+["bp15*=2","b15>=1","\"All bets are off\" magic coin","chancemaker2",30,"Chancemakers are twice as effective",1300000000000000000]
 ["bp16*=2","b16>=1","Metabakeries","fractal1",31,"Fractal engines are twice as effective",3100000000000000000]
 ["bp16*=2","b16>=1","Mandelbrown sugar","fractal2",32,"Fractal engines are twice as effective",15500000000000000000]
