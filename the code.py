@@ -102,7 +102,7 @@ def buy(num): #buy building number num
 def clear_cookies(): #clear cookies
   global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0") #write to file
   file.close() #close file
   
   achievements_to_unlock=achievements[:] #reset achievements
@@ -110,12 +110,12 @@ def clear_cookies(): #clear cookies
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades,clicking_cookies #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -176,6 +176,7 @@ def load_save_data(): #load save data
   ft=timer(int(file[53]),finishfrenzy) if file[53]!="0" else timer(0,lambda:None)
   unlocked_upgrades=bin(int(file[54]))[:-2:-1]
   bought_upgrades=bin(int(file[55]))[:-2:-1]
+  clicking_cookies=decimal(file[56])
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1)
   
@@ -184,6 +185,9 @@ def load_save_data(): #load save data
 
   while len(unlocked_upgrades)<len(upgrades): #keep adding zeroes until there is enough
     unlocked_upgrades+="0"
+
+  while len(bought_upgrades)<len(upgrades): #keep adding zeroes until there is enough
+    bought_upgrades+="0"
 
   achievement_id=1
   for achievement_unlocked in unlock_achievements: #for every achievement
@@ -244,7 +248,7 @@ def inputcommand(): #input
 
 def save(autosave=False):
   ft.cancel()
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2)]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2),clicking_cookies]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -440,10 +444,12 @@ def golden_timer(): #timer to make golden cookies
 ################################################################################
 load_save_data() #load save data
 
-add_cookies() #add cookies
+#add_cookies() #add cookies
 
 th=timer(60,autosave) #the autosaving timer
 th.start() #start timer
+
+t=th
 
 changesurface() #change the surface (actually make the surface)
 draw() #draw the non-changing surface
@@ -512,11 +518,12 @@ while True: #game loop
           draw_text2("???:",(320,25*((achievement_id-1)//8))) #question marks
           draw_text2("???",(320,25*((achievement_id-1)//8+1))) #question marks
     screen.blit(pygame.image.load("pictures/milk"+str(unlock_achievements.count("1")//9+1)+".png"),(500,675))
+    draw_text2(f"Milk: {unlock_achievements.count('1')*100//9}%",(525,675),(175,25))
 
   if rightpanel=="u": #upgrade right panel
     upgrade_places=[x for _,_,_,_,x,_,_ in upgrades if unlocked_upgrades[x-1]=="1"]
-    for effect,name,icon,upgrade_id,desc,price in [(a,b,c,d,e,f) for a,_,b,c,d,e,f in upgrades if unlocked_upgrades[d-1]=="1"]: #for every unlocked upgrade
-      upgrade_id=upgrade_places.index(upgrade_id)+1
+    for effect,name,icon,upgrade_id2,desc,price in [(a,b,c,d,e,f) for a,_,b,c,d,e,f in upgrades if unlocked_upgrades[d-1]=="1"]: #for every unlocked upgrade
+      upgrade_id=upgrade_places.index(upgrade_id2)+1
       screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8))) #draw its icon
       
       if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8): #if you hover over it
@@ -525,13 +532,13 @@ while True: #game loop
           
           list_bought_upgrades=list(bought_upgrades) #list it
           
-          list_bought_upgrades[upgrade_id-1]="1" #buy it
+          list_bought_upgrades[upgrade_id2-1]="1" #buy it
         
           bought_upgrades="".join(list_bought_upgrades) #join it back
 
           list_unlocked_upgrades=list(unlocked_upgrades) #list it
           
-          list_unlocked_upgrades[upgrade_id-1]="0" #buy it aka lock it
+          list_unlocked_upgrades[upgrade_id2-1]="0" #buy it aka lock it
         
           unlocked_upgrades="".join(list_unlocked_upgrades) #join it back
           
@@ -561,8 +568,9 @@ while True: #game loop
         mouse_pos=pygame.mouse.get_pos() #set mouse_pos to mouse position
         if not sum([int(bool(gc.check())) for gc in goldens]): #if you are not clicking on a colden cookie
           if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
-            cookies+=cpc #add cpc to cookies
-            total_cookies+=cpc #add cpc to total cookies
+            cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01")) #add cpc to cookies
+            total_cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01")) #add cpc to total cookies
+            clicking_cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01"))
             
             if not mute: #if not muted
               threading.Thread(target=play_random_click).start() #play random click sound

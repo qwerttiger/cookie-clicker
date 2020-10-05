@@ -1,8 +1,7 @@
 currently working on:
-upgrades
+milk
 ---
 gonna work on:
-milk
 ascend
 sugar lump
 seasons
@@ -80,3 +79,4 @@ WAY better achievements (v1.55)
 
 20201004:
 upgrades fix (v2.02)
+milk (v2.03)
