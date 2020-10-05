@@ -62,6 +62,7 @@ def simplify(num):
     return simplify(num[0:-1])
   else:
     return num.strip(".")
+
 def numbershortener(num): #numbershortener
   if num<1000000:
     return str(num)
@@ -510,6 +511,7 @@ while True: #game loop
           
           draw_text2("???:",(320,25*((achievement_id-1)//8))) #question marks
           draw_text2("???",(320,25*((achievement_id-1)//8+1))) #question marks
+    screen.blit(pygame.image.load("pictures/milk"+str(unlock_achievements.count("1")//9+1)+".png"),(500,675))
 
   if rightpanel=="u": #upgrade right panel
     upgrade_places=[x for _,_,_,_,x,_,_ in upgrades if unlocked_upgrades[x-1]=="1"]
