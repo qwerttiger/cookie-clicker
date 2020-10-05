@@ -57,29 +57,34 @@ upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
 bluebackground=pygame.Surface((700,700))
 bluebackground.fill((0,0,255))
 ################################################################################
+def simplify(num):
+  if num[-1]=="0":
+    return simplify(num[0:-1])
+  else:
+    return num.strip(".")
 def numbershortener(num): #numbershortener
   if num<1000000:
     return str(num)
   elif num<1000000000:
-    return str(round(num/1000000,3))+" million"
+    return simplify(str(round(num/1000000,3)))+" million"
   elif num<1000000000000:
-    return str(round(num/1000000000,3))+" billion"
+    return simplify(str(round(num/1000000000,3)))+" billion"
   elif num<1000000000000000:
-    return str(round(num/1000000000000,3))+" trillion"
+    return simplify(str(round(num/1000000000000,3)))+" trillion"
   elif num<1000000000000000000:
-    return str(round(num/1000000000000000,3))+" quadrillion"
+    return simplify(str(round(num/1000000000000000,3)))+" quadrillion"
   elif num<1000000000000000000000:
-    return str(round(num/1000000000000000000,3))+" quintillion"
+    return simplify(str(round(num/1000000000000000000,3)))+" quintillion"
   elif num<1000000000000000000000000:
-    return str(round(num/1000000000000000000000,3))+" sextillion"
+    return simplify(str(round(num/1000000000000000000000,3)))+" sextillion"
   elif num<1000000000000000000000000000:
-    return str(round(num/1000000000000000000000000,3))+" septillion"
+    return simplify(str(round(num/1000000000000000000000000,3)))+" septillion"
   elif num<1000000000000000000000000000000:
-    return str(round(num/1000000000000000000000000000,3))+" octillion"
+    return simplify(str(round(num/1000000000000000000000000000,3)))+" octillion"
   elif num<1000000000000000000000000000000000:
-    return str(round(num/1000000000000000000000000000000,3))+" nonillion"
+    return simplify(str(round(num/1000000000000000000000000000000,3)))+" nonillion"
   elif num<1000000000000000000000000000000000000:
-    return str(round(num/1000000000000000000000000000000000,3))+" decillion"
+    return simplify(str(round(num/1000000000000000000000000000000000,3)))+" decillion"
   else:
     return "Infinity"
 
@@ -507,7 +512,9 @@ while True: #game loop
           draw_text2("???",(320,25*((achievement_id-1)//8+1))) #question marks
 
   if rightpanel=="u": #upgrade right panel
+    upgrade_places=[x for _,_,_,_,x,_,_ in upgrades if unlocked_upgrades[x-1]=="1"]
     for effect,name,icon,upgrade_id,desc,price in [(a,b,c,d,e,f) for a,_,b,c,d,e,f in upgrades if unlocked_upgrades[d-1]=="1"]: #for every unlocked upgrade
+      upgrade_id=upgrade_places.index(upgrade_id)+1
       screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8))) #draw its icon
       
       if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8): #if you hover over it
