@@ -53,9 +53,6 @@ goldens=[] #on-screen golden cookies
 
 upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval(("["+open("upgrades.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy"))] #the upgrades
 upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
-
-bluebackground=pygame.Surface((700,700))
-bluebackground.fill((0,0,255))
 ################################################################################
 def simplify(num):
   if num[-1]=="0":
@@ -171,7 +168,7 @@ def load_save_data(): #load save data
   cookies=decimal(file[48])
   cpc=int(file[49])
   total_cookies=decimal(file[50])
-  multiplier=int(file[51])
+  multiplier=decimal(file[51])
   unlock_achievements=bin(int(file[52]))[:-2:-1]
   ft=timer(int(file[53]),finishfrenzy) if file[53]!="0" else timer(0,lambda:None)
   unlocked_upgrades=bin(int(file[54]))[:-2:-1]
@@ -225,8 +222,8 @@ def draw_text2(text,pos,size=(180,25)):
 def add_cookies(): #add cookies
   global cookies,total_cookies,t #global variables
   
-  cookies+=cps*multiplier/decimal(1000) #add cookies
-  total_cookies+=cps*multiplier/decimal(1000) #add total cookies
+  cookies+=cps #add cookies
+  total_cookies+=cps #add total cookies
   
   t=timer(0.1,add_cookies) #t is a timer
   t.start() #start timer
@@ -461,6 +458,7 @@ gt=timer(60,golden_timer) #the golden cookie timer
 gt.start() #start it
 
 while True: #game loop
+  milk=unlock_achievements.count('1')/9
   for unlock_cond,_,_,achievement_id,_ in achievements_to_unlock: #for every achievement
     if eval(unlock_cond): #if the condition is true
       unlock_achievement(achievement_id) #get the achievement
@@ -494,8 +492,9 @@ while True: #game loop
   screen.blit(surface,(0,0)) #draw the first surface
   screen.blit(surface2,(0,0)) #draw the second surface
 
-  cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100 #calculate cps
+  cps=decimal(str(sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100*(1 if bought_upgrades[34]=="0" else 1+decimal(str(3/10))*decimal(str(milk))))) #calculate cps
   cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1) #calculate cps
+  
   
   if rightpanel=="a": #achievements right panel
     for _,name,icon,achievement_id,desc in achievements: #for every achievement
