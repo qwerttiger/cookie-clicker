@@ -3,6 +3,7 @@ import threading #import threading for timers and threads
 import random #import random for random numbers
 import time #import time to sleep
 import os #import os to hide support prompt
+import math
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"]="hide" #hide support prompt
 import pygame #import pygame
 from decimal import Decimal as decimal #import decimal numbers with infinite precision
@@ -53,6 +54,15 @@ goldens=[] #on-screen golden cookies
 
 upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval(("["+open("upgrades.txt").read().replace("]","],")+"]").replace("cps","cps_not_including_frenzy"))] #the upgrades
 upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
+
+wrinklers=False
+wrinklerslist=[]
+wrinkler1,wrinkler2,wrinkler3,wrinkler4,wrinkler5,wrinkler6,wrinkler7,wrinkler8,wrinkler9,wrinkler10=pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700]),pygame.Surface([700,700])
+for wrinklernum in range(1,11):
+  exec(f"wrinkler{wrinklernum}.set_colorkey(white)")
+  exec(f"wrinkler{wrinklernum}.fill(white)")
+  θ=(wrinklernum-1)*math.pi/5-math.pi/2
+  exec(f"wrinkler{wrinklernum}.blit(pygame.transform.rotate(pygame.image.load(\"pictures/wrinkler.png\"),{-(wrinklernum-1)*36}),(350+min(-325*math.cos(θ),0)-abs(50*math.sin(θ)),350+min(-325*math.sin(θ),0)-abs(50*math.cos(θ))))")
 ################################################################################
 def simplify(num):
   if num[-1]=="0":
@@ -458,6 +468,8 @@ gt=timer(60,golden_timer) #the golden cookie timer
 gt.start() #start it
 
 while True: #game loop
+  if wrinklers and len(wrinklerslist)<=9:
+    wrinklerslist+=[[random.choice(list({0,1,2,3,4,5,6,7,8,9}-set([x for x,y in wrinklerslist]))),0]]
   milk=unlock_achievements.count('1')/9
   for unlock_cond,_,_,achievement_id,_ in achievements_to_unlock: #for every achievement
     if eval(unlock_cond): #if the condition is true
@@ -553,7 +565,8 @@ while True: #game loop
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
 
   [gc.draw() for gc in goldens] #draw every current golden cookie
-  
+  for num,_ in wrinklerslist:
+    exec(f"screen.blit(wrinkler{num+1},(0,0))")
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
       pygame.quit() #pygame quit
