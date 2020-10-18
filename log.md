@@ -1,12 +1,11 @@
 currently working on:
-milk
+grandmapocalyse
 ---
 gonna work on:
 ascend
 sugar lump
 seasons
 krumblor
-grandmapocalypse
 garden
 pantheon
 grimore
@@ -80,3 +79,12 @@ WAY better achievements (v1.55)
 20201004:
 upgrades fix (v2.02)
 milk (v2.03)
+
+20201005:
+clicking upgrades (v2.04)
+milk upgrades (2.05)
+
+20201008:
+drawing wrinklers (2.05)
+legit wrinklers (2.07)
+quick fix
