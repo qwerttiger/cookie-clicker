@@ -33,3 +33,4 @@
 ["multiplier*=decimal(\"1.01\")","total_cookies>=100000","Plain cookies","plain",33,"Cookie multiplier +1%",1000000]
 ["","clicking_cookies>=1000","Plastic mouse","click1",34,"Clicking gains +1% of your CpS",50000]
 ["","milk>=1","Kitten helpers","milkupgrade1",35,"You get more CpS the more milk you have",9000000]
+["wrinklers=True","True","Start the grandmapocalypse","grandmapocalypse",36,"Start the grandmapocalypse",1000000000000]
