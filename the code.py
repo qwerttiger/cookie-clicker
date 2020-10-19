@@ -25,7 +25,7 @@ pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
 big_cookie_mask=pygame.mask.from_surface(big_cookie) #big cookie mask
 gold_cookie=pygame.image.load("pictures/golden.png") #golden cookie picture
-wrath_cookie=pygame.image.load("pictures/wrath.png") #golden cookie picture
+wrath_cookie=pygame.image.load("pictures/wrath.png") #wrath cookie picture
 gold_cookie_mask=pygame.mask.from_surface(gold_cookie) #golden cookie mask
 
 click1=pygame.mixer.Sound("sounds/click1.wav") #click sound 1
@@ -56,19 +56,19 @@ goldens=[] #on-screen golden cookies
 upgrades=[[a,b,c,pygame.image.load("pictures/"+d+".png"),e,f,g] for a,b,c,d,e,f,g in eval(("["+open("upgrades.txt").read().replace("\n",",\n")+"]").replace("cps","cps_not_including_frenzy"))] #the upgrades
 upgrades_to_unlock=upgrades[:] #the non-unlocked upgrades
 
-for wrinklernum in range(1,11):
-  exec(f"wrinkler{wrinklernum}=pygame.Surface([700,700])")
-  exec(f"wrinkler{wrinklernum}.set_colorkey(white)")
-  exec(f"wrinkler{wrinklernum}.fill(white)")
-  θ=(wrinklernum-1)*math.pi/5-math.pi/2
-  exec(f"wrinkler{wrinklernum}.blit(pygame.transform.rotate(pygame.image.load(\"pictures/wrinkler.png\"),{-(wrinklernum-1)*36}),(350+min(-325*math.cos(θ),0)-abs(50*math.sin(θ)),350+min(-325*math.sin(θ),0)-abs(50*math.cos(θ))))")
-  exec(f"wrinkler{wrinklernum}mask=pygame.mask.from_surface(wrinkler{wrinklernum})")
+for wrinklernum in range(1,11): #for every wrinkler position
+  exec(f"wrinkler{wrinklernum}=pygame.Surface([700,700])") #set wrinkler to a surface
+  exec(f"wrinkler{wrinklernum}.set_colorkey(white)") #white colourkey
+  exec(f"wrinkler{wrinklernum}.fill(white)") #fill with white
+  θ=(wrinklernum-1)*math.pi/5-math.pi/2 #set theta to be the angle
+  exec(f"wrinkler{wrinklernum}.blit(pygame.transform.rotate(pygame.image.load(\"pictures/wrinkler.png\"),{-(wrinklernum-1)*36}),(350+min(-325*math.cos(θ),0)-abs(50*math.sin(θ)),350+min(-325*math.sin(θ),0)-abs(50*math.cos(θ))))") #draw the wrinkler on the surface
+  exec(f"wrinkler{wrinklernum}mask=pygame.mask.from_surface(wrinkler{wrinklernum})") #make the mask
 ################################################################################
-def simplify(num):
-  if num[-1]=="0":
-    return simplify(num[0:-1])
-  else:
-    return num.strip(".")
+def simplify(num): #simplify a stringed number
+  if num[-1]=="0": #if it ends with a 0
+    return simplify(num[0:-1]) #return the simplified version of the number without a 0
+  else: #else
+    return num.strip(".") #get rid of the period
 
 def numbershortener(num): #numbershortener
   if num<1000000:
@@ -466,8 +466,8 @@ def frenzy(): #frenzy function
   else: #if there is a current frenzy effect
     del ft #replace ft
   
-  ft=timer(77,finishfrenzy)
-  ft.start()
+  ft=timer(77,finishfrenzy) #set the timer
+  ft.start() #start the timer
 
 def finishfrenzy(): #define finishfrenzy
   global multiplier #global multiplier
@@ -477,7 +477,7 @@ def finishfrenzy(): #define finishfrenzy
 def spawn_golden(): #spawn golden
   global goldens #global goldens
   
-  goldens+=[random.choice([golden()]*(3-gstage)+[wrath()]*gstage)] #add a golden cookie to goldens
+  goldens+=[random.choice([golden()]*(3-gustage)+[wrath()]*gustage)] #add a golden cookie to goldens
   
   gold_sound.play() #play sound
 
@@ -487,15 +487,19 @@ def golden_timer(): #timer to make golden cookies
   gt=timer(60,golden_timer) #gt is a timer
   gt.start() #start it
 
-def pledgefunc():
-  global gustage,pledge
-  gustage=0
-  pledge=timer(1800,finishpledge)
-  pledge.start()
+def pledgefunc(): #pledge function
+  global gustage,pledge,wrinklers,cookies #globals
+  gustage=0 #set to stage 0
+  pledge=timer(1800,finishpledge) #set timer
+  pledge.start() #start timer
+  wrinklers=False #no more wrinklers
+  cookies+=sum([popped*1.1 for _,popped in wrinklers]) #pop all wrinklers
+  wrinklers=[] #delete all wrinklers
 
-def finishpledge():
-  global gustage
-  gustage=gstage
+def finishpledge(): #finish pledge
+  global gustage,wrinklers #global
+  gustage=gstage #go to normal stage
+  wrinklers=True #wrinklers again
 ################################################################################
 load_save_data() #load save data
 
@@ -503,8 +507,6 @@ add_cookies() #add cookies
 
 th=timer(60,autosave) #the autosaving timer
 th.start() #start timer
-
-t=th
 
 changesurface() #change the surface (actually make the surface)
 draw() #draw the non-changing surface
@@ -516,9 +518,10 @@ gt=timer(60,golden_timer) #the golden cookie timer
 gt.start() #start it
 
 while True: #game loop
-  if wrinklers and len(wrinklerslist)<=9 and random.randint(1,wtime)==1:
-    wrinklerslist+=[[random.choice(list({0,1,2,3,4,5,6,7,8,9}-set([x for x,y in wrinklerslist]))),0]]
-  milk=unlock_achievements.count('1')/9
+  if wrinklers and len(wrinklerslist)<=9 and random.randint(1,wtime)==1: #if there is a wrinkler spot and a 1/wtime change
+    wrinklerslist+=[[random.choice(list({0,1,2,3,4,5,6,7,8,9}-set([x for x,y in wrinklerslist]))),0]] #add a wrinkler
+  
+  milk=unlock_achievements.count('1')/9 #set milk
   for unlock_cond,_,_,achievement_id,_ in achievements_to_unlock: #for every achievement
     if eval(unlock_cond): #if the condition is true
       unlock_achievement(achievement_id) #get the achievement
@@ -539,9 +542,11 @@ while True: #game loop
   except: #if something went wrong
     pass #pass
 
-  screen.fill(white)
-  for num,_ in wrinklerslist:
-    exec(f"screen.blit(wrinkler{num+1},(0,0))")
+  screen.fill(white) #fill with white
+  
+  for num,_ in wrinklerslist: #for every wrinkler
+    exec(f"screen.blit(wrinkler{num+1},(0,0))") #draw it
+  
   if cookies!=decimal("infinity"): #if not infinity cookies
     draw_text(f"{numbershortener(round(cookies))} cookies",(350,100),25,False) #draw text
   else: #if infinity cookies
@@ -578,14 +583,15 @@ while True: #game loop
           
           draw_text2("???:",(320,25*((achievement_id-1)//8))) #question marks
           draw_text2("???",(320,25*((achievement_id-1)//8+1))) #question marks
-    screen.blit(pygame.image.load("pictures/milk"+str(unlock_achievements.count("1")//9+1)+".png"),(500,675))
-    draw_text2(f"Milk: {unlock_achievements.count('1')*100//9}%",(525,675),(175,25))
+    
+    screen.blit(pygame.image.load("pictures/milk"+str(unlock_achievements.count("1")//9+1)+".png"),(500,675)) #draw milk picture
+    draw_text2(f"Milk: {unlock_achievements.count('1')*100//9}%",(525,675),(175,25)) #write milk amount
 
   if rightpanel=="u": #upgrade right panel
-    upgrade_places=[x for _,_,_,_,x,_,_ in upgrades if unlocked_upgrades[x-1]=="1"]
+    upgrade_places=[x for _,_,_,_,x,_,_ in upgrades if unlocked_upgrades[x-1]=="1"] #the upgrade places in the upgrades panel
     
     for effect,name,icon,upgrade_id2,desc,price in [(a,b,c,d,e,f) for a,_,b,c,d,e,f in upgrades if unlocked_upgrades[d-1]=="1"]: #for every unlocked upgrade
-      upgrade_id=upgrade_places.index(upgrade_id2)+1
+      upgrade_id=upgrade_places.index(upgrade_id2)+1 #upgrade id 
       screen.blit(icon,(500+25*((upgrade_id-1)%8),25*((upgrade_id-1)//8))) #draw its icon
       
       if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8): #if you hover over it
@@ -605,8 +611,6 @@ while True: #game loop
            
           exec(effect) #execute its effect
           
-          
-          
           cookies-=price #get rid of some cookies
           
         pygame.draw.rect(screen,(0,0,0),pygame.Rect(320,25*((upgrade_id-1)//8),180,75),1) #outline
@@ -617,7 +621,9 @@ while True: #game loop
         draw_text2(f"Price: {numbershortener(price)}",(320,25*((upgrade_id-1)//8+2))) #price
   
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
-  clickwrinkler=True
+  
+  clickwrinkler=True #see if you not clicking on something that is not a wrinkler
+  
   [gc.draw() for gc in goldens] #draw every current golden cookie
   
   for event in pygame.event.get(): #for every event
@@ -632,25 +638,29 @@ while True: #game loop
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
         mouse_pos=pygame.mouse.get_pos() #set mouse_pos to mouse position
+        
         if not sum([int(bool(gc.check())) for gc in goldens]): #if you are not clicking on a golden cookie
           if big_cookie_mask.overlap_area(pointer_mask,(mouse_pos[0]-225,mouse_pos[1]-225)): #if you click the big cookie
-            clickwrinkler=False
+            clickwrinkler=False #you are clicking on the cookie, not a wrinkler
+            
             cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01")) #add cpc to cookies
             total_cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01")) #add cpc to total cookies
-            clicking_cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01"))
+            clicking_cookies+=decimal(str(cpc))+cps*(0 if bought_upgrades[33]=="0" else decimal("0.01")) #add cpc to clicking cookies
             
             if not mute: #if not muted
               threading.Thread(target=play_random_click).start() #play random click sound
           
           if mouse_pos[0]>=500 and rightpanel=="b": #if you buy
-            clickwrinkler=False
+            clickwrinkler=False #you are buying not clicking a wrinkler
+            
             for _ in range(1,17): #for everything in the range
               buy(_) #see if you bought it
             
             changesurface() #change the surface
 
           if mouse_pos[0]<=200 and mouse_pos[1]<=100: #clicking on achievements
-            clickwrinkler=False
+            clickwrinkler=False #you are clicking on the achievement button not on a wrinkler
+            
             if rightpanel!="a":  #if not on achievements mode
               rightpanel="a" #go to achievements mode
             else: #if you are already on
@@ -659,7 +669,8 @@ while True: #game loop
             changesurface() #change the surface
 
           if mouse_pos[0]<=200 and 100<=mouse_pos[1]<=200: #upgrades mode
-            clickwrinkler=False
+            clickwrinkler=False #you are clicking on the upgrade button which is not a wrinkler
+            
             if rightpanel!="u": #if not on upgrades mode
               rightpanel="u" #go to upgrades mode
             else: #if on upgrades mode
@@ -668,18 +679,21 @@ while True: #game loop
             changesurface() #change the surface
           
           if 300<=mouse_pos[0]<=400 and 500<=mouse_pos[1]<=600: #if mute/unmute
-            clickwrinkler=False
+            clickwrinkler=False #you are mute/unmuting not clicking on a wrinkler
+            
             mute=not mute #mute/unmute
 
-          if wrinklers and clickwrinkler:
-            wnum=0
-            for wrinkler in wrinklerslist:
-              if eval(f"wrinkler{wrinkler[0]+1}mask").overlap_area(pointer_mask,(mouse_pos[0],mouse_pos[1])):
-                print(f"You gained {numbershortener(round(wrinklerslist[wnum][1]*1.1))} cookies")
-                cookies+=decimal(wrinklerslist[wnum][1]*1.1)
-                total_cookies+=decimal(wrinklerslist[wnum][1]*1.1)
-                del wrinklerslist[wnum]
-              wnum+=1
+          if wrinklers and clickwrinkler: #if there are wrinklers and you are not clicking on something that isn't a wrinkler
+            wnum=0 #wrinkler number
+            
+            for wrinkler in wrinklerslist: #for every wrinkler
+              if eval(f"wrinkler{wrinkler[0]+1}mask").overlap_area(pointer_mask,(mouse_pos[0],mouse_pos[1])): #if you click on it
+                print(f"You gained {numbershortener(round(wrinklerslist[wnum][1]*1.1))} cookies") #you gained cookies
+                cookies+=decimal(wrinklerslist[wnum][1]*1.1) #add cookies
+                total_cookies+=decimal(wrinklerslist[wnum][1]*1.1) #get cookies
+                
+                del wrinklerslist[wnum] #delete that wrinkler
+              wnum+=1 #next wrinkler number
 
         for gc in goldens[::-1]: #for every golden cookie
           if gc.check(): #if clicking on it
@@ -697,7 +711,7 @@ while True: #game loop
         if fps_track: #if tracking fps
           tm.cancel() #cancel timer
         ft.cancel() #cancel timer
-        pledge.cancel()
+        pledge.cancel() #cancel timer
         while loop: #while loop
           finish=False #finish is false
           threading.Thread(target=command).start() #start command line
@@ -707,9 +721,9 @@ while True: #game loop
         if fps_track: #if tracking fps
           tm.start() #restart timer
         ft.start() #restart timer
-        pledge.start()
+        pledge.start() #cancel timer
   
-  if fps_track:
+  if fps_track: #if you are tracking fps
     t1,t2=time.time(),t1 #change t1 and t2
   
   pygame.display.update() #update pygame
