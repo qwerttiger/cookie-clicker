@@ -36,3 +36,4 @@
 ["wrinklers=True;gstage=1","True","Start the grandmapocalypse","grandmapocalypse1",36,"Start the grandmapocalypse",1000000000000]
 ["wtime=500000;gstage=2","bought_upgrades[35]==\"1\"","Faster wrinklers","grandmapocalypse2",37,"Wrinklers spawn quicker",2000000000000]
 ["wtime=333333;gstage=3","bought_upgrades[36]==\"1\"","Fastest wrinklers","grandmapocalypse3",38,"Wrinklers spawn quicker",4000000000000]
+["pledgefunc();bought_upgrades=bought_upgrades[:38]+\"0\"+bought_upgrades[39:];unlocked_upgrades=unlocked_upgrades[:38]+\"0\"+unlocked_upgrades[39:]","gstage==3 and pledge.timeleft<=0","Elder pledge","pledge",39,"Stop the grandmaplcalypse, at least for a while",666666666666666]

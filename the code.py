@@ -109,7 +109,7 @@ def buy(num): #buy building number num
 def clear_cookies(): #clear cookies
   global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0\n0\n0") #write to file
   file.close() #close file
   
   achievements_to_unlock=achievements[:] #reset achievements
@@ -117,12 +117,12 @@ def clear_cookies(): #clear cookies
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades,clicking_cookies,wrinklers,wrinklerslist,wtime,gstage #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades,clicking_cookies,wrinklers,wrinklerslist,wtime,gstage,gustage,pledge #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0\n0\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -188,6 +188,8 @@ def load_save_data(): #load save data
   wrinklerslist=eval(file[58])
   wtime=int(file[59])
   gstage=int(file[60])
+  gustage=int(file[61])
+  pledge=timer(int(file[62]),finishfrenzy) if file[62]!="0" else timer(0,lambda:None)
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1)
   
@@ -264,12 +266,14 @@ def inputcommand(): #input
 
 def save(autosave=False):
   ft.cancel()
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2),clicking_cookies,int(wrinklers),wrinklerslist,wtime,gstage]])")) #save
+  pledge.cancel()
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2),clicking_cookies,int(wrinklers),wrinklerslist,wtime,gstage,gustage,0 if round(pledge.timeleft)<=0 else round(pledge.timeleft)]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
     print("autosaved") #print autosaved
   ft.start()
+  pledge.start()
 
 def autosave():
   global th #global th
@@ -463,6 +467,7 @@ def frenzy(): #frenzy function
     del ft #replace ft
   
   ft=timer(77,finishfrenzy)
+  ft.start()
 
 def finishfrenzy(): #define finishfrenzy
   global multiplier #global multiplier
@@ -481,6 +486,16 @@ def golden_timer(): #timer to make golden cookies
   
   gt=timer(60,golden_timer) #gt is a timer
   gt.start() #start it
+
+def pledgefunc():
+  global gustage,pledge
+  gustage=0
+  pledge=timer(1800,finishpledge)
+  pledge.start()
+
+def finishpledge():
+  global gustage
+  gustage=gstage
 ################################################################################
 load_save_data() #load save data
 
@@ -576,8 +591,6 @@ while True: #game loop
       if 500+25*((upgrade_id-1)%8)<=pygame.mouse.get_pos()[0]<=525+25*((upgrade_id-1)%8) and 25*((upgrade_id-1)//8)<=pygame.mouse.get_pos()[1]<=25+25*((upgrade_id-1)//8): #if you hover over it
         if pygame.mouse.get_pressed()!=(0,0,0) and cookies>=price and not sum([int(bool(gc.check())) for gc in goldens]): #if you click and you have enough cookies
           clickwrinkler=False
-          exec(effect) #execute its effect
-          
           list_bought_upgrades=list(bought_upgrades) #list it
           
           list_bought_upgrades[upgrade_id2-1]="1" #buy it
@@ -589,6 +602,10 @@ while True: #game loop
           list_unlocked_upgrades[upgrade_id2-1]="0" #buy it aka lock it
         
           unlocked_upgrades="".join(list_unlocked_upgrades) #join it back
+           
+          exec(effect) #execute its effect
+          
+          
           
           cookies-=price #get rid of some cookies
           
@@ -602,7 +619,7 @@ while True: #game loop
   draw_text("Unmute" if mute else "Mute",(350,550),15,False) #draw mute/unmute text
   clickwrinkler=True
   [gc.draw() for gc in goldens] #draw every current golden cookie
-  print(bought_upgrades)
+  
   for event in pygame.event.get(): #for every event
     if event.type==pygame.QUIT: #if quit pygame
       pygame.quit() #pygame quit
@@ -610,6 +627,7 @@ while True: #game loop
       th.cancel() #cancel timer
       if fps_track: #if track fps
         tm.cancel() #cancel timer
+      ft.cancel()
       sys.exit() #exit
     if event.type==pygame.MOUSEBUTTONDOWN: #if you click
       if event.button in [1,2,3]: #if you click and not scroll
@@ -679,6 +697,7 @@ while True: #game loop
         if fps_track: #if tracking fps
           tm.cancel() #cancel timer
         ft.cancel() #cancel timer
+        pledge.cancel()
         while loop: #while loop
           finish=False #finish is false
           threading.Thread(target=command).start() #start command line
@@ -688,6 +707,7 @@ while True: #game loop
         if fps_track: #if tracking fps
           tm.start() #restart timer
         ft.start() #restart timer
+        pledge.start()
   
   if fps_track:
     t1,t2=time.time(),t1 #change t1 and t2
