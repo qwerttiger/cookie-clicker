@@ -25,6 +25,7 @@ pointer_mask=pygame.mask.Mask((1,1),True) #pointer mask
 big_cookie=pygame.image.load("pictures/cookie.png") #big cookie picture
 big_cookie_mask=pygame.mask.from_surface(big_cookie) #big cookie mask
 gold_cookie=pygame.image.load("pictures/golden.png") #golden cookie picture
+wrath_cookie=pygame.image.load("pictures/wrath.png") #golden cookie picture
 gold_cookie_mask=pygame.mask.from_surface(gold_cookie) #golden cookie mask
 
 click1=pygame.mixer.Sound("sounds/click1.wav") #click sound 1
@@ -108,7 +109,7 @@ def buy(num): #buy building number num
 def clear_cookies(): #clear cookies
   global achievements_to_unlock
   file=open("save data.txt","w") #open the file
-  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000") #write to file
+  file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0") #write to file
   file.close() #close file
   
   achievements_to_unlock=achievements[:] #reset achievements
@@ -116,12 +117,12 @@ def clear_cookies(): #clear cookies
   load_save_data() #load save data
 
 def load_save_data(): #load save data
-  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades,clicking_cookies,wrinklers,wrinklerslist,wtime #global variables
+  global b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cps,cps_not_including_frenzy,cpc,total_cookies,multiplier,unlock_achievements,achievements_to_unlock,ft,unlocked_upgrades,bought_upgrades,clicking_cookies,wrinklers,wrinklerslist,wtime,gstage #global variables
   try: #try to
     file=open("save data.txt").read().split() #open file for reading
   except: #if the file does not exist
     file=open("save data.txt","w") #open file for writing
-    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000") #write this
+    file.write("0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n15\n100\n1100\n12000\n130000\n1400000\n20000000\n330000000\n5100000000\n75000000000\n1000000000000\n14000000000000\n170000000000000\n2100000000000000\n26000000000000000\n310000000000000000\n0.1\n1\n8\n47\n260\n1400\n7800\n44000\n260000\n1600000\n10000000\n65000000\n430000000\n2900000000\n21000000000\n150000000000\n0\n1\n0\n100\n0\n0\n0\n0\n0\n0\n[]\n1000000\n0") #write this
     file.close() #close file
     file=open("save data.txt").read().split() #read file
 
@@ -186,6 +187,7 @@ def load_save_data(): #load save data
   wrinklers=bool(file[57])
   wrinklerslist=eval(file[58])
   wtime=int(file[59])
+  gstage=int(file[60])
   cps=sum([eval(f"b{bnum}*bp{bnum}") for bnum in range(1,17)])*multiplier/100
   cps_not_including_frenzy=cps/(7 if ft.timeleft>=0 else 1)
   
@@ -262,7 +264,7 @@ def inputcommand(): #input
 
 def save(autosave=False):
   ft.cancel()
-  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2),clicking_cookies,int(wrinklers),wrinklerslist,wtime]])")) #save
+  open("save data.txt","w").write(eval("chr(10).join([str(x) for x in [b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,bc1,bc2,bc3,bc4,bc5,bc6,bc7,bc8,bc9,bc10,bc11,bc12,bc13,bc14,bc15,bc16,bp1,bp2,bp3,bp4,bp5,bp6,bp7,bp8,bp9,bp10,bp11,bp12,bp13,bp14,bp15,bp16,cookies,cpc,total_cookies,multiplier,int(unlock_achievements[::-1],2),0 if round(ft.timeleft)<=0 else round(ft.timeleft),int(unlocked_upgrades[::-1],2),int(bought_upgrades[::-1],2),clicking_cookies,int(wrinklers),wrinklerslist,wtime,gstage]])")) #save
   if not autosave:
     print("saved!") #print saved
   else:
@@ -428,6 +430,30 @@ class golden: #class golden cookie
     if time.time()>=self.timestart+15: #if has run out of time
       goldens.remove(self) #delete it
 
+class wrath: #class wrath cookie
+  def __init__(self): #define init
+    self.pos=[random.randint(0,608),random.randint(0,608)] #position
+    self.randout=random.choice(["Ruin","Frenzy"]) #random outcome
+    self.timestart=time.time() #the time it appeared
+  
+  def check(self): #check if the pointer is on it
+    if gold_cookie_mask.overlap_area(pointer_mask,(pygame.mouse.get_pos()[0]-self.pos[0],pygame.mouse.get_pos()[1]-self.pos[1])): #if its on
+      return True #return true
+  
+  def effect(self): #define effect
+    if self.randout=="Ruin": #if it is lucky
+      global cookies #global variables
+      
+      cookies-=max(min(round(decimal(0.2)*cookies),1200*cps),0)
+    
+    if self.randout=="Frenzy": #if its frenzy
+      frenzy() #then frenzy
+  
+  def draw(self): #draw itself
+    screen.blit(wrath_cookie,self.pos) #draw
+    if time.time()>=self.timestart+15: #if has run out of time
+      goldens.remove(self) #delete it
+
 def frenzy(): #frenzy function
   global multiplier,ft #global variables
   
@@ -446,7 +472,7 @@ def finishfrenzy(): #define finishfrenzy
 def spawn_golden(): #spawn golden
   global goldens #global goldens
   
-  goldens+=[golden()] #add a golden cookie to goldens
+  goldens+=[random.choice([golden()]*(3-gstage)+[wrath()]*gstage)] #add a golden cookie to goldens
   
   gold_sound.play() #play sound
 
